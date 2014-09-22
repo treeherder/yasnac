@@ -19,19 +19,11 @@ class YASNAC():  # a classs to handle the yasnac
     # sys.stdout.write('\n')
     # sys.stdout.flush()
     return packet
-    """inq = self.com.readlines()
-    print(inq)
-    if inq:  #if the inquiry ezists 
-      if cue in inq:
-       return(True)
-    elif cue == None:
-      return(inq)
-    return(False)"""
       
   def  tx(self, response): # automatic or custom reply
     if response is None: 
-      response = "02030041434B2Eff".encode("hex") 
-    self.com.write("{0}".format(response))
+      response = "\x02\x03\x00ACK\x2e\xff"
+    self.com.write(response)
   
   #rx() and tx() are the two most basic methods of this class
   #handshake is an example of combining rx() and tx() 
@@ -57,6 +49,10 @@ while True:
   packet = moto.rx(None)
   if packet != '':
     print packet
+  enqpos = packet.find('ENQ')
+  if enqpos >= 0:
+    print enqpos
+    moto.tx(None)
 """if "LST" in moto.handshake():
   moto.list_files()
 else:

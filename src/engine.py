@@ -36,12 +36,11 @@ class YASNAC():  # a classs to handle the yasnac
     return(self.rx(None))  #ready for the next step
 
   def list_files(self, filenames): #filenames as a single string in ASCII separated by FOUR (4) spaces
-    self.tx("0273004C5354{0}1FE0".format(filenames.decode("hex"))) # "\x02\x73\x00LST0009123\x2e4C5354{0}1FE0"
-    
-    if self.rx("ACK") == True:
-      self.tx("020300454F4623".decode("hex"))
-      if self.rx("EOT") == True:
-        print("filenames sent... proceeding")
+    # self.tx("0273004C5354{0}1FE0".format(filenames.encode("hex")).decode("hex")) # "\x02\x73\x00LST0009123\x2e4C5354{0}1FE0"
+    response = "\x02\x13\x00LST{0}\x00\xfc".format(filenames)
+    print response
+    self.tx(response) #.format(filenames.encode("hex")).decode("hex")) # "\x02\x73\x00LST0009123\x2e4C5354{0}1FE0"
+    return
         
 # some procedural style stuff to get you started:
 moto = YASNAC()  #instantiate the class
@@ -53,5 +52,7 @@ while True:
     print "replying to ENQ"
     time.sleep(0.005)
     moto.tx(None)
-  if "LST" in packet:
-    moto.list_files()
+  elif "LST" in packet:
+    print "replying to LST"
+    time.sleep(5.005)
+    moto.list_files("0001123.JBI     ")

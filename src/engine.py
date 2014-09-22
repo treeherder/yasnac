@@ -9,14 +9,15 @@ class YASNAC():  # a classs to handle the yasnac
   
 
   def rx(self, cue):
-    inq = self.com.readlines()
+    print self.com.readlines()
+    """inq = self.com.readlines()
     print(inq)
     if inq:  #if the inquiry ezists 
       if cue in inq:
        return(True)
     elif cue == None:
       return(inq)
-    return(False)
+    return(False)"""
       
   def  tx(self, response): # automatic or custom reply
     if response is None: 
@@ -45,9 +46,9 @@ class YASNAC():  # a classs to handle the yasnac
 moto = YASNAC()  #instantiate the class
 while True:
   moto.rx(None)
-'''if "LST" in moto.handshake():
+"""if "LST" in moto.handshake():
   moto.list_files()
 else:
   print ("no list requested")
   exit(0)
-'''
+"""

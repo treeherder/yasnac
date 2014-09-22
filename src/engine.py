@@ -1,15 +1,24 @@
-import serial, time
+import serial, time, sys
 
 
 class YASNAC():  # a classs to handle the yasnac
   def __init__(self):
-    self.com = serial.Serial(port='/dev/ttyS0', baudrate=4800,parity=serial.PARITY_EVEN) 
+    self.com = serial.Serial(port='/dev/ttyS0', baudrate=4800,parity=serial.PARITY_EVEN,timeout=0)
     #initialize the class a connection to the serial port
-    time.sleep(4)# wait for the port to be ready (this is an arbitrary period) 
-  
+    time.sleep(1)# wait for the port to be ready (this is an arbitrary period)
+    sys.stdout.write('opened serial port.\n')
+    sys.stdout.flush()
 
   def rx(self, cue):
-    print self.com.readlines()
+    packet = ''
+    while self.com.inWaiting():
+      r = self.com.read()
+      packet += r # append the character
+      # sys.stdout.write(r)
+      # sys.stdout.flush()
+    # sys.stdout.write('\n')
+    # sys.stdout.flush()
+    return packet
     """inq = self.com.readlines()
     print(inq)
     if inq:  #if the inquiry ezists 
@@ -45,7 +54,9 @@ class YASNAC():  # a classs to handle the yasnac
 # some procedural style stuff to get you started:
 moto = YASNAC()  #instantiate the class
 while True:
-  moto.rx(None)
+  packet = moto.rx(None)
+  if packet != '':
+    print packet
 """if "LST" in moto.handshake():
   moto.list_files()
 else:

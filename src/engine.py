@@ -9,7 +9,7 @@ class YASNAC():  # a classs to handle the yasnac
   
 
   def rx(self, cue):
-    print self.com.readlines()
+    print self.com.read()
     """inq = self.com.readlines()
     print(inq)
     if inq:  #if the inquiry ezists 

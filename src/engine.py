@@ -52,6 +52,7 @@ while True:
   enqpos = packet.find('ENQ')
   if enqpos >= 0:
     print enqpos
+    time.sleep(0.005)
     moto.tx(None)
 """if "LST" in moto.handshake():
   moto.list_files()

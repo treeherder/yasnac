@@ -36,7 +36,7 @@ class YASNAC():  # a classs to handle the yasnac
     return(self.rx(None))  #ready for the next step
 
   def list_files(self, filenames): #filenames as a single string in ASCII separated by FOUR (4) spaces
-    self.tx("0273004C5354{0}1FE0".format(filenames.encode("hex")))
+    self.tx("0273004C5354{0}1FE0".format(filenames.decode("hex"))) # "\x02\x73\x00LST0009123\x2e4C5354{0}1FE0"
     
     if self.rx("ACK") == True:
       self.tx("020300454F4623".decode("hex"))
@@ -49,14 +49,9 @@ while True:
   packet = moto.rx(None)
   if packet != '':
     print packet
-  enqpos = packet.find('ENQ')
-  if enqpos >= 0:
-    print enqpos
+  if "ENQ" in packet:
+    print "replying to ENQ"
     time.sleep(0.005)
     moto.tx(None)
-"""if "LST" in moto.handshake():
-  moto.list_files()
-else:
-  print ("no list requested")
-  exit(0)
-"""
+  if "LST" in packet:
+    moto.list_files()

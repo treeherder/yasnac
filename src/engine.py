@@ -14,10 +14,6 @@ class YASNAC():  # a classs to handle the yasnac
     while self.com.inWaiting():
       r = self.com.read()
       packet += r # append the character
-      # sys.stdout.write(r)
-      # sys.stdout.flush()
-    # sys.stdout.write('\n')
-    # sys.stdout.flush()
     return packet
       
   def  tx(self, response): # automatic or custom reply
@@ -38,7 +34,8 @@ class YASNAC():  # a classs to handle the yasnac
   def list_files(self, filenames): #filenames as a single string in ASCII separated by FOUR (4) spaces
     # self.tx("0273004C5354{0}1FE0".format(filenames.encode("hex")).decode("hex")) # "\x02\x73\x00LST0009123\x2e4C5354{0}1FE0"
     response = "\x02\x13\x00LST{0}\x00\xfc".format(filenames)
-    print response
+    checksum = sum([ord(c) for c in response])
+    print response+" "+str(checksum) # checksum is 1278, any change results in NAK
     self.tx(response) #.format(filenames.encode("hex")).decode("hex")) # "\x02\x73\x00LST0009123\x2e4C5354{0}1FE0"
     return
         

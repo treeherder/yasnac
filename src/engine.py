@@ -51,5 +51,9 @@ while True:
     moto.tx(None)
   elif "LST" in packet:
     print "replying to LST"
-    time.sleep(5.005)
+    time.sleep(0.005)
     moto.list_files("0001123.JBI     ")
+  elif "ACK" in packet:
+    print "replying to ACK"
+    time.sleep(0.005)
+    moto.tx("\x02\x03\x00EOF#\xff")

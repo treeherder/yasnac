@@ -30,3 +30,5 @@ class MTM(port_a, port_b):
   def relay(self):
     self.tx(floppy, self.rx(yasnac))
     self.tx(yasnac, self.rx(floppy))
+
+# at the end of the file put log.close()

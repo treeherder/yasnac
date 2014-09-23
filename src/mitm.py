@@ -9,7 +9,7 @@ disk = serial.Serial(port=diskPort, baudrate=baudRate,parity=parity,timeout=0)
 
 logfileName = 'mitm.log'
 logfile = open(logfileName,'w')
-header = 'spying on conversation between {0} and {1}'.format(yasnacPort,diskPort)
+header = 'spying on conversation between {0} and {1} at {2} baud.'.format(yasnacPort,diskPort,baudRate)
 logfile.write(header)
 sys.stdout.write('opened mitm.log\n')
 sys.stdout.flush()
@@ -35,7 +35,7 @@ while True:
       if d == '\\x0d':
         d = '\r'
       if d == '\\x0a':
-        d = ''
+        d = '\n'
       sys.stdout.write(d)
       sys.stdout.flush()
     if disk.inWaiting():
@@ -52,7 +52,7 @@ while True:
       if d == '\\x0d':
         d = '\r'
       if d == '\\x0a':
-        d = ''
+        d = '\n'
       sys.stdout.write(d)
       sys.stdout.flush()
   except KeyboardInterrupt:

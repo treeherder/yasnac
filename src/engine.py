@@ -36,17 +36,23 @@ class YASNAC(object):
 
     def __init__(self):
         self.com = serial.Serial(port='/dev/ttyS0', baudrate=4800,
-                                 parity=serial.PARITY_EVEN, timeout=0)
+                                 parity=serial.PARITY_EVEN, timeout=None)
         sleep(1)  # wait for the port to be ready (an arbitrary period)
         log("opened serial port")
 
     def raw_read(self):
         """ Return the contents of incoming raw data on the serial port """
-        return self.com.read(size=self.com.inWaiting())
+        while not self.com.inWaiting():
+            sleep(0.25)
+        result = self.com.read(size=self.com.inWaiting())
+        warn("raw_read {} bytes: {}".format(len(result), result))
+        return result
 
     def raw_write(self, message):
         """ Send a raw packet on the serial port """
         self.com.write(message)
+        warn("raw_write {} bytes: {}".format(len(message), message))
+        sleep(0.25)
 
     def read(self):
         """ return decoded packet(s) from the serial port """
@@ -55,7 +61,6 @@ class YASNAC(object):
     def write(self, message):
         """ encode and send the given message to the serial port """
         self.raw_write(packets.encode(message))
-        sleep(0.25)
 
     def confirmed_write(self, message, limit=10):
         """ send a message, repeating as needed until we get an ack """
@@ -88,26 +93,35 @@ class YASNAC(object):
             if packet == 'ENQ':
                 self.write('ACK')
                 continue
+
             if packet == 'ACK':
-                self.write('EOF')
+                warn("Unexpected ACK")
                 continue
+
             if packet == 'LST':
                 for filename in os.listdir('.'):
                     if not filename.endswith('.JBI') or len(filename) > 16:
                         continue
                     self.confirmed_write("LST{:16}".format(filename))
                 self.write("EOF")
+                continue
+
             if packet == 'DSZ':
                 self.write("DSZ00729088")
                 continue
+
             if packet.startswith("FRD"):
                 filename = packet[3:].rstrip()
                 with open(filename) as inputfh:
                     filedata = inputfh.read()
                 # send the file in 255 character blocks, retrying as necessary
+                self.confirmed_write("FSZ{:08}".format(len(fileadata)))
                 for chunk in chunks(filedata, 255):
                     self.confirmed_write("FRD" + chunk)
                 self.write("EOF")
+                continue
+
+            warn("Unhandled packet: {}".format(packet))
 
 
 def main():

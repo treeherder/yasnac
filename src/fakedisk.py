@@ -69,8 +69,32 @@ while True:
     time.sleep(0.005)
     moto.tx("DSZ00729088") # tell it how much free space on our "disk"
   elif "FRD" in packet:
-    jobFile = open(filepath+filename,'r')
-    jobFileLength = str(os.path.getsize(filepath+filename)).rjust(8,'0')
-    print "replying with FSZ"+jobFileLength
+    jobFileLength = os.path.getsize(filepath+filename)
+    jobFileLengthText = str(jobFileLength).rjust(8,'0')
+    print "replying with FSZ"+jobFileLengthText
     time.sleep(0.005)
-    moto.tx("FSZ"+jobFileLength) # tell it how much free space on our "disk"
+    moto.tx("FSZ"+jobFileLengthText) # tell it how big a file to expect
+    packet = ''
+    while packet == '':
+      packet = moto.rx()
+    print packet
+    if 'ACK' not in packet:
+      print 'expected ACK but received '+packet
+    jobFile = open(filepath+filename,'r')
+    while jobFileLength > 0:
+      chunkSize = jobFileLength
+      if chunkSize > 256:
+        chunkSize = 256
+      chunk = jobFile.read(chunkSize)
+      print 'sending '+str(len(chunk))+' bytes'
+      time.sleep(0.005)
+      moto.tx("FRD"+chunk)
+      jobFileLength -= chunkSize
+      packet = ''
+      while packet == '':
+        packet = moto.rx()
+      if 'ACK' not in packet:
+        print 'expected ACK but received '+packet
+    print "sending EOF"
+    time.sleep(0.005)
+    moto.tx('EOF')

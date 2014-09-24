@@ -12,6 +12,9 @@ class YASNAC():  # a classs to handle the yasnac
       r = self.com.read()
       packet += r # append the character
       time.sleep(0.005)
+      if len(packet) > 7:
+        if len(packet) == ord(packet[1]) + ord(packet[2]) * 256 + 5:
+          break
     if len(packet) > 7:
       length = ord(packet[1]) + ord(packet[2]) * 256
       checksum = 65536 - sum([ord(c) for c in packet[1:length+3]]) # length and message

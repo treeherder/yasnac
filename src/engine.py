@@ -14,7 +14,20 @@ class YASNAC():  # a classs to handle the yasnac
     while self.com.inWaiting():
       r = self.com.read()
       packet += r # append the character
-    return packet
+    if len(packet) > 6:
+      length = ord(packet[1]) + ord(packet[2]) * 256
+      checksum = 65536 - sum([ord(c) for c in packet[1:length+3]]) # length and message
+      # print '\''+str(packet[1:length+3])+'\''
+      if ord(packet[0]) != 2:
+        print 'packet[0] != 2'
+      if len(packet) != length + 5:
+        print 'len(packet) != length + 5'
+      if ord(packet[length+3]) != checksum % 256:
+        print str(ord(packet[length+3]))+' ord(packet[length+3]) != checksum % 256'
+      if ord(packet[length+4]) != checksum / 256:
+        print str(ord(packet[length+4]))+' ord(packet[length+4]) != checksum / 256'
+      return packet[3:length+3]
+    return packet # empty string
       
   def  tx(self, response): # automatic or custom reply
     if response is None: 

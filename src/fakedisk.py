@@ -36,7 +36,7 @@ class YASNAC():  # a classs to handle the yasnac
             debugmsg += d
         return '\'' + debugmsg + '\'  ' + errors
       return packet[3:length+3]
-    return '' # empty string
+    return packet # should be empty string
       
   def  tx(self, response): # automatic or custom reply
     length = len(response)

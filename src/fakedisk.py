@@ -3,7 +3,6 @@ import serial, time
 class YASNAC():  # a classs to handle the yasnac
   def __init__(self):
     self.com = serial.Serial(port='/dev/ttyS0', baudrate=4800,parity=serial.PARITY_EVEN,timeout=0.5)
-    time.sleep(1)# wait for the port to be ready (this is an arbitrary period)
     print('opened serial port.')
 
   def rx(self):

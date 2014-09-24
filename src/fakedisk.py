@@ -19,14 +19,23 @@ class YASNAC():  # a classs to handle the yasnac
       length = ord(packet[1]) + ord(packet[2]) * 256
       checksum = 65536 - sum([ord(c) for c in packet[1:length+3]]) # length and message
       # print '\''+str(packet[1:length+3])+'\''
+      errors = ''
       if ord(packet[0]) != 2:
-        print 'packet[0] != 2'
-      if len(packet) != length + 5:
-        print str(len(packet))+'len(packet) != length + 5'+str(length+5)
+        errors += 'packet[0] != 2  '
+      if len(packet) != (length + 5):
+        errors += str(len(packet))+' len(packet) != (length + 5) '+str(length+5)+'  '
       if ord(packet[length+3]) != checksum % 256:
-        print str(ord(packet[length+3]))+' ord(packet[length+3]) != checksum % 256'
+        errors += str(ord(packet[length+3]))+' ord(packet[length+3]) != checksum % 256 '+str(checksum % 256)+'  '
       if ord(packet[length+4]) != checksum / 256:
-        print str(ord(packet[length+4]))+' ord(packet[length+4]) != checksum / 256'
+        errors += str(ord(packet[length+4]))+' ord(packet[length+4]) != checksum / 256 '+str(checksum / 256)
+      if len(errors) > 0:
+        debugmsg = ''
+        for d in packet:
+          if (ord(d) < 32) or (ord(d) > 126):
+            debugmsg += '\\x' + d.encode('hex')
+          else:
+            debugmsg += d
+        return '\'' + debugmsg + '\'  ' + errors
       return packet[3:length+3]
     return '' # empty string
       

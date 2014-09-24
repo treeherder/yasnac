@@ -31,8 +31,6 @@ class YASNAC():  # a classs to handle the yasnac
     return '' # empty string
       
   def  tx(self, response): # automatic or custom reply
-    if response is None: 
-      response = "ACK"
     length = len(response)
     response = chr(length % 256)+chr(length / 256)+response
     checksum = 65536 - sum([ord(c) for c in response])
@@ -59,19 +57,24 @@ class YASNAC():  # a classs to handle the yasnac
         
 # some procedural style stuff to get you started:
 moto = YASNAC()  #instantiate the class
+filename = '123.JBI'
 while True:
   packet = moto.rx(None)
   if packet != '':
     print packet
   if "ENQ" in packet:
-    print "replying to ENQ"
+    print "replying with ACK"
     time.sleep(0.005)
-    moto.tx(None)
+    moto.tx('ACK')
   elif "LST" in packet:
-    print "replying to LST"
+    print "replying with LST0001"+filename
     time.sleep(0.005)
-    moto.tx("LST0001123.JBI     ")
+    moto.tx("LST0001"+filename.ljust(12))
   elif "ACK" in packet:
-    print "replying to ACK"
+    print "replying with EOF"
     time.sleep(0.005)
     moto.tx("EOF")
+  elif "DSZ" in packet:
+    print "replying with DSZ00729088"
+    time.sleep(0.005)
+    moto.tx("DSZ00729088")

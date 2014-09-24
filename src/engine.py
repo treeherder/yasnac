@@ -18,8 +18,12 @@ class YASNAC():  # a classs to handle the yasnac
       
   def  tx(self, response): # automatic or custom reply
     if response is None: 
-      response = "\x02\x03\x00ACK\x2e\xff"
-    self.com.write(response)
+      response = "ACK"
+    length = len(response)
+    response = chr(length % 256)+chr(length / 256)+response
+    checksum = 65536 - sum([ord(c) for c in response])
+    packet = '\x02'+response+chr(checksum % 256)+chr(checksum / 256)
+    self.com.write(packet)
   
   #rx() and tx() are the two most basic methods of this class
   #handshake is an example of combining rx() and tx() 
@@ -52,8 +56,8 @@ while True:
   elif "LST" in packet:
     print "replying to LST"
     time.sleep(0.005)
-    moto.list_files("0001123.JBI     ")
+    moto.tx("LST0001123.JBI     ")
   elif "ACK" in packet:
     print "replying to ACK"
     time.sleep(0.005)
-    moto.tx("\x02\x03\x00EOF#\xff")
+    moto.tx("EOF")

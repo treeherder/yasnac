@@ -106,7 +106,7 @@ class YASNAC(object):
                     filedata = inputfh.read()
                 # send the file in 255 character blocks, retrying as necessary
                 for chunk in chunks(filedata, 255):
-                    self.confirmed_write(chunk)
+                    self.confirmed_write("FRD" + chunk)
                 self.write("EOF")
 
 

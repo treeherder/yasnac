@@ -1,4 +1,4 @@
-import serial, time
+import serial, time, os
 
 class YASNAC():  # a classs to handle the yasnac
   def __init__(self):
@@ -46,7 +46,8 @@ class YASNAC():  # a classs to handle the yasnac
     self.com.write(packet)
   
 moto = YASNAC()  #instantiate the class
-filename = '123.JBI'
+filepath = ''
+filename = 'BABY.JBI'
 while True:
   packet = moto.rx()
   if packet != '':
@@ -67,3 +68,9 @@ while True:
     print "replying with DSZ00729088"
     time.sleep(0.005)
     moto.tx("DSZ00729088") # tell it how much free space on our "disk"
+  elif "FRD" in packet:
+    jobFile = open(filepath+filename,'r')
+    jobFileLength = str(os.path.getsize(filepath+filename)).rjust(8,'0')
+    print "replying with FSZ"+jobFileLength
+    time.sleep(0.005)
+    moto.tx("FSZ"+jobFileLength) # tell it how much free space on our "disk"

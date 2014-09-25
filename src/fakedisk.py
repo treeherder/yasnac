@@ -16,7 +16,7 @@ class YASNAC():  # a classs to handle the yasnac
           break
     if len(packet) > 7:
       length = ord(packet[1]) + ord(packet[2]) * 256
-      checksum = 65536 - sum([ord(c) for c in packet[1:length+3]]) # length and message
+      checksum = -sum([ord(c) for c in packet[1:length+3]]) % 65536 # length and message
       # print '\''+str(packet[1:length+3])+'\''
       errors = ''
       if ord(packet[0]) != 2:
@@ -41,7 +41,7 @@ class YASNAC():  # a classs to handle the yasnac
   def  tx(self, response): # automatic or custom reply
     length = len(response)
     response = chr(length % 256)+chr(length / 256)+response
-    checksum = 65536 - sum([ord(c) for c in response])
+    checksum = -sum([ord(c) for c in response]) % 65536
     packet = '\x02'+response+chr(checksum % 256)+chr(checksum / 256)
     self.com.write(packet)
   

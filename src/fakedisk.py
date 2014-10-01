@@ -34,7 +34,7 @@ class YASNAC():  # a classs to handle the yasnac
             debugmsg += '\\x' + d.encode('hex')
           else:
             debugmsg += d
-        return '\'' + debugmsg + '\'  ' + errors
+        return 'error: \'' + debugmsg + '\'  ' + errors
       return packet[3:length+3]
     return packet # should be empty string
       
@@ -98,3 +98,32 @@ while True:
     print "sending EOF"
     time.sleep(0.005)
     moto.tx('EOF')
+  elif "FWT" in packet:
+    saveFileText = packet[3:].rstrip()
+    print "asked to save \'"+saveFileText+"\', replying with ACK"
+    saveFile = open(filepath+saveFileText,'w')
+    time.sleep(0.005)
+    moto.tx('ACK')
+    print 'waiting for FWT and file data'
+    while True:
+      while packet == '':
+        packet = moto.rx()
+      if packet.find('error:') == 0: # we got a garbled packet
+        print packet
+        print 'replying with NAK'
+        time.sleep(0.005)
+        moto.tx('NAK')
+        continue
+      if 'EOF' in packet[:3]:
+        print 'yasnac sent EOF, closing file '+saveFileText
+        saveFile.close()
+        time.sleep(0.005)
+        moto.tx('ACK')
+        break
+      if 'FWT' in packet[:3] and length(packet) > 3:
+        saveFile.write(packet[3:]) # save everything after FWT
+        print 'wrote '+str(len(packet)-3)+' bytes to '+saveFileText
+      else:
+        print 'expected FWT but received '+packet
+      time.sleep(0.005)
+      moto.tx('ACK')

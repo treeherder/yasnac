@@ -106,6 +106,7 @@ while True:
     moto.tx('ACK')
     print 'waiting for FWT and file data'
     while True:
+      packet = ''
       while packet == '':
         packet = moto.rx()
       if packet.find('error:') == 0: # we got a garbled packet
@@ -120,7 +121,7 @@ while True:
         time.sleep(0.005)
         moto.tx('ACK')
         break
-      if 'FWT' in packet[:3] and length(packet) > 3:
+      if 'FWT' in packet[:3] and len(packet) > 3:
         saveFile.write(packet[3:]) # save everything after FWT
         print 'wrote '+str(len(packet)-3)+' bytes to '+saveFileText
       else:

@@ -1,0 +1,48 @@
+python 'fakedisk.py'
+opened serial port.
+ENQ
+replying with ACK
+LST
+replying with LST0001BABY.JBI
+ACK
+replying with EOF
+EOT
+ENQ
+replying with ACK
+DSZ
+replying with DSZ00729088
+ACK
+replying with EOF
+EOT
+ENQ
+replying with ACK
+FWTSUDOROOM.JBI
+asked to save 'SUDOROOM.JBI', replying with ACK
+waiting for FWT and file data
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 256 bytes to SUDOROOM.JBI
+wrote 60 bytes to SUDOROOM.JBI
+yasnac sent EOF, closing file SUDOROOM.JBI
+EOT

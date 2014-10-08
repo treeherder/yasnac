@@ -1,9 +1,14 @@
 yasnac
 ======
 
-floppy emulation, control API for YASNAC motoman
+floppy disk drive emulation for YASNAC ERC motoman controller
+also a serial man-in-the-middle program used for watching disk operations
 
+src/fakedisk.py pretends to be a floppy disk drive, which the YASNAC ERC can read from and save files to.
 
-TODO:
+presently, fakedisk.py is hard-coded to present a single filename to the YASNAC available to load.
+saving from the yasnac with any filename is fine. 
+
+DATA:
 ----
-serial.readlines() seems to be insufficient.. each chracter will have to be read in through serial.read() and placed into a buffer.
+data have been saved from the YASNAC to various .DAT files which are in the dat/ subdirectory

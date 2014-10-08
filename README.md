@@ -12,3 +12,7 @@ saving from the yasnac with any filename is fine.
 DATA:
 ----
 data have been saved from the YASNAC to various .DAT files which are in the dat/ subdirectory
+
+JOBS:
+----
+robot jobs have been saved from the YASNAC to various .JBI files which are in the jobs/ subdirectory

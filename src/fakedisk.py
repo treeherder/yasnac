@@ -46,7 +46,7 @@ class YASNAC():  # a classs to handle the yasnac
     self.com.write(packet)
   
 moto = YASNAC()  #instantiate the class
-filepath = ''
+filepath = '../jobs/'
 filename = 'BABY.JBI'
 while True:
   packet = moto.rx()

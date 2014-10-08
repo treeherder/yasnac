@@ -3,6 +3,14 @@
 import struct
 
 
+class InvalidPacketHeader(Exception):
+    pass
+
+
+class NeedMoreInput(Exception):
+    pass
+
+
 def encode(payload):
     """ Return a string representation of a properly encoded packet """
     length_str = struct.pack("<H2", len(payload))
@@ -13,20 +21,33 @@ def encode(payload):
 
 def decode(packet):
     """
-    Return an array containing decoded packet payloads. The packet argument
-    can contain the data of multiple packets run together, which is useful
-    because the serial buffer sometimes contains multiple packets
+    Return a decoded packet payload. The packet argument can contain the data
+    of multiple packets run together
+
+    packets look like this:
+    -----------------------
+    2LLPPPP...CC
+    0123456.....
+
+    where:
+    ------
+    2 = the literal byte \x02
+    LL = a two byte number indicating the length of the packet
+    PPPP... = an LL-length string of bytes
+    CC = two bytes of checksum
     """
     if not packet.startswith("\x02"):
-        raise ValueError("Unknown packet format")
+        raise InvalidPacketHeader("Unknown packet format")
     length = struct.unpack("<H2", packet[1:3])[0]
-    payload = packet[1:1+2+length]  # two bytes of length are included
-    surplus = packet[1+2+length+2:]  # e.g. the next packet
-    stated_checksum = packet[1+2+length:1+2+length+2]
+    if len(packet) < length + 5:
+        raise NeedMoreInput
+    payload = packet[1:3+length]  # the initial 2 length bytes are included
+    stated_checksum = packet[3+length:5+length]
     calc_checksum = struct.pack("<H2", 65536 - sum([ord(x) for x in payload]))
     if stated_checksum != calc_checksum:
         raise ValueError("Invalid packet! Checksum fail: {} != {}".format(
-            stated_checksum.encode('hex'), calc_checksum.encode('hex')))
+            stated_checksum.__repr__(), calc_checksum.__repr__()))
     # return a list of packets, excluding the size bytes at the beginning of
     # each payload
-    return [payload[2:]] + (decode(surplus) if len(surplus) else [])
+    return (payload[2:], length + 5)
+

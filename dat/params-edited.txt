@@ -1,0 +1,2383 @@
+﻿
+RC002
+600000
+L-axis arm-length (distance between the centers of l-axis rotation and u-axis rotation)
+microns
+
+
+RC001
+200000
+X-direction offset distance between centers of s-axis rotation and l-axis rotation
+microns
+
+
+RC003
+0
+y-direction offset distance between center of s-axis rotation and surface of u-axis rotation 
+microns
+
+
+RC004
+115000
+offset distance between center of u-axis rotation and r-axis center line
+microns
+
+
+RC005
+770000
+u-axis arm length (distance between the intersection of u-axis offset end the center of b-axis rotation)
+microns
+
+
+RC006
+0
+distance between centers of r-axis rotation and t-axis rotation
+microns
+
+
+RC007
+100000
+distance between center of b-axis rotation and flange surface (original point of flange coordinate)
+microns
+
+
+RC008
+0
+Distance between centers of l-axis rotation and l-axis drive unit rotation
+microns
+
+
+RC009
+0
+Distance between centers of l-axis rotation and u-axis drive unit rotation
+microns
+
+
+RC010
+0
+Distance between centers of l-axis rotation and l-axis ball screw nut
+microns
+
+
+RC011
+0
+Distance between centers of l-axis rotation and u-axis ball screw nut
+miccrons
+
+
+RC012
+0
+conversion factor for l-axis angle (1)
+
+
+RC013
+0
+Conversion factor for u-axis angle (1)
+
+
+RC014
+0
+Distance between a1-axis and a2-axis center (only for K10ASB)
+microns
+
+
+RC020
+0
+R-B-axes compensation coefficient (x0.001)
+(for K205S: L-B compensation coefficient)
+
+
+
+RC021
+0
+R-T-axes compensation coefficient (x0.001)
+
+
+RC022
+-80000
+B-T-axes compensation coefficient (x0.001)
+
+
+RC024
+100
+accel/decel time (ms)
+related to RC108, RC109
+not used
+
+RC025
+0
+Gravity at end of wrist
+(for s-axis)
+
+
+RC026
+10000
+S-axis accel/decel offset value
+
+RC027
+10339000
+S-axis accel/decel compensation constant (1)
+
+
+RC028
+0
+L-axis accel/decel compensation constant (1)
+
+
+RC029
+0
+U-axis accel/decel compensation constant (1)
+
+
+RC030
+0
+R-axis accel/decel compensation constant (1)
+
+
+RC031
+0
+B-axis accel/decel compensation constant (1)
+
+
+RC032
+0
+T-axis accel/decel compensation constant (1)
+
+RC039
+226670
+T-axis max. acceleration
+pulse/s2
+
+RC033
+100
+Data for movement between steps (%)
+
+
+
+RC034
+510000
+S-axis max. acceleration 
+pulse/s2
+
+
+RC035
+340000
+L-axis max. acceleration
+pulse/s2
+
+
+RC036
+408000
+U-axis max. acceleration
+pulse/s2
+
+
+RC037
+233330
+R-axis max. acceleration
+pulse/s2
+
+
+RC038
+233330
+B-axis max. acceleration
+pulse/s2
+
+RC040
+510000
+S-axis Max. deceleration
+pulse/s2
+
+
+RC041
+340000
+L-axis max. deceleration
+pulse/s2
+
+
+RC042
+408000
+U-axis max. deceleration
+pulse/s2
+
+
+RC043
+233330
+R-axis max. deceleration
+pulse/s2
+
+
+RC044
+233330
+B-axis max. deceleration
+pulse/s2
+
+
+RC045
+226670
+T-axis max. deceleration
+pulse/s2
+
+RC046
+122400
+S-axis resolution
+pulse/s2
+
+
+RC047
+-122400
+L-axis resolution
+model V/S (pulse/360 degree)
+model L: ball screw disposition
+(micron/motor revolution)
+
+
+RC048
+122400
+U-Axis resolution
+model V/S (pulse/360 degree)
+model L: ball screw disposition
+(micron/motor revolution)
+
+
+RC049
+-32000
+R-axis resolution
+pulse/360 degrees
+
+
+RC050
+32000
+B-axis resolution
+pulse/360 degrees
+
+RC051
+-20400
+T-axis resolution
+pulse/360 degrees
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RC052
+40800
+S-axis max pps
+pulse/s
+
+
+RC053
+40800
+L-axis max pps
+pulse/s
+
+
+RC054
+40800
+U-axis max pps
+pulse/s
+
+
+RC055
+23333
+R-axis max pps
+pulse/s
+
+
+RC056
+23333
+B-axis max pps
+pulse/s
+
+RC057
+22667
+T-axis max pps
+pulse/s
+
+
+RC058
+3000
+S-axis motor rated speed
+rpm
+
+
+RC059
+3000
+L-axis motor rated speed
+rpm
+
+
+RC060
+3000
+U-axis motor rated speed
+rpm
+
+
+RC061
+3000
+R-axis motor rated speed
+rpm
+
+
+RC062
+3000
+B-axis motor rated speed
+rpm
+
+RC063
+3000
+T-axis motor rated speed
+rpm
+
+
+RC064
+800
+S-axis pulse generator ratio (ppr)
+Note: 4x pulse generator output pulse/motor revolution
+
+
+RC065
+800
+L-axis pulse generator ratio (ppr)
+Note: 4x pulse generator output pulse/motor revolution
+
+
+RC066
+800
+U-axis pulse generator ratio (ppr)
+Note: 4x pulse generator output pulse/motor revolution
+
+
+RC067
+400
+R-axis pulse generator ratio (ppr)
+Note: 4x pulse generator output pulse/motor revolution
+
+
+RC068
+400
+B-axis pulse generator ratio (ppr)
+Note: 4x pulse generator output pulse/motor revolution
+
+RC069
+400
+T-axis pulse generator ratio (ppr)
+Note: 4x pulse generator output pulse/motor revolution
+
+
+RC070
+4000
+S-axis saturation zone
+pulse
+
+
+
+RC071
+4000
+L-axis saturation zone
+pulse
+
+
+RC072
+4000
+U-axis saturation zone
+pulse
+
+
+RC073
+3000
+R-axis saturation zone
+pulse
+
+
+RC074
+3000
+B-axis saturation zone
+pulse
+
+RC075
+3000
+T-axis saturation zone
+pulse
+
+
+RC076
+5
+S-axis position setting zone (for PL=0)
+pulse
+
+
+RC077
+5
+L-axis position setting zone (for PL=0)
+pulse
+
+
+RC078
+5
+U-axis position setting zone (for PL=0)
+pulse
+
+
+RC079
+5
+R-axis position setting zone (for PL=0)
+pulse
+
+
+RC080
+5
+B-axis position setting zone (for PL=0)
+pulse
+
+RC081
+5
+T-axis position setting zone (for PL=0)
+pulse
+
+
+RC082
+0
+S-axis alarm zone setting (pulse)
+0:  automatic setting 
+others:  setting by zone value
+
+
+RC083
+0
+L-axis alarm zone setting (pulse)
+0:  automatic setting 
+others:  setting by zone value
+
+
+RC084
+0
+U-axis alarm zone setting (pulse)
+0:  automatic setting 
+others:  setting by zone value
+
+
+RC085
+0
+R-axis alarm zone setting (pulse)
+0:  automatic setting 
+others:  setting by zone value
+
+RC086
+0
+B-axis alarm zone setting (pulse)
+0:  automatic setting 
+others:  setting by zone value
+
+
+RC087
+0
+T-axis alarm zone setting (pulse)
+0:  automatic setting 
+others:  setting by zone value
+
+
+RC088
+150
+S-axis servo gain
+(xo.1)
+
+
+RC089
+150
+L-axis servo gain
+(xo.1)
+
+
+RC090
+150
+U-axis servo gain
+(xo.1)
+
+
+RC091
+150
+R-axis servo gain
+(xo.1)
+
+
+RC092
+150
+B-axis servo gain
+(xo.1)
+
+
+RC093
+150
+T-axis servo gain
+(xo.1)
+
+
+RC100
+63
+Controlled axis designation
+byte
+set by bits
+
+
+RC101
+22
+Robot axis motor rotation direction designation
+(byte)
+set by bits
+
+
+RC102
+0
+Robot axis position detector sign designation
+(byte)
+set by bits
+
+RC103
+1
+Number of absolute data reading
+
+
+RC104
+5
+Brake open timing
+(x0.1s)
+
+
+
+RC105
+45
+Robot orientation designation
+
+
+RC107
+5
+Average play segment no for accel/decel operation
+(with relation to SC030)
+
+
+RC109
+9
+Average teaching segment no.
+(with relation to SC030)
+
+
+RC110
+0
+Start condition after alarm=1290
+0:  position confirmation
+1:  slow start
+
+SC410 - SC412
+
+Synchronously controlled axis, pattern 1 through 3 (bit setting)
+Initial value:  0
+
+Set a decimal number so as to set 1 for the bit that represents the two external 
+axes to be synchronized.
+
+D7  D6  D5  D4  D3  D2  D1  D0
+  |      |      |     |      |      |      |     |____1st ext. axis
+  |      |      |     |      |      |      |_______2nd ext. axis
+  |      |      |     |      |      |__________3rd ext. axis
+  |      |      |     |      |_____________4th ext. axis
+  |      |      |     |________________5th ext. axis
+  |      |      |___________________6th ext. axis
+  |      |______________________always set to 0
+  |_________________________always set to 0
+
+The external axis specified by parameters SC410 to SC412 must be specified as 
+control axis by SC250.  Otherwise error 2230 or error 1020 occurs.  See errors 
+for an example.
+
+
+RC150
+
+Computation constant
+unit:  microns
+
+
+RC151
+
+Distance between the L-axis rotation center and the L-arm gravity center
+unit:  microns
+
+
+RC152
+
+Distance between the U-arm gravity center and the rotational center line intersections of the U-axis and R-axis
+unit:  microns
+
+
+RC153
+
+Distance between the L-axis rotation center and the balance weight gravity center
+unit:  microns
+
+
+RC154
+
+Link A gravity center distance
+unit:  microns
+
+
+
+RC155
+
+Link B gravity center distance
+unit:  microns
+
+
+RC156
+
+Offset angle of link B against the U-arm
+unit:  x0.001 Degrees
+
+RC157
+
+Offset angle of the balance weight gravity center against the ground
+unit:  x0.001 degree
+
+
+RC160
+
+Maximum payload
+unit:  g
+
+
+RC161
+
+L-arm weight
+unit:  g
+
+
+
+RC162
+
+Weight on the U-axis rotation center
+unit:  g
+
+
+RC163
+
+Weight on the intersection of the rotation center lines of U-axis and R-axis
+unit:  g
+
+
+RC164
+
+U-arm weight
+unit:  g
+
+RC165
+
+weight on the B-axis rotation center
+unit:  g
+
+
+RC166
+
+Balance weight
+unit:  g
+
+
+RC167
+
+Link A-weight
+unit:  g
+
+
+RC170
+
+acc/dec condition: S-axis GD2 without payload
+unit:  gm2
+
+
+RC171
+
+Acc/dec condition: S-axis minimum GD2
+unit:  gm2
+
+
+RC172
+
+Acc/dec condition: correction constant for S-axis
+unit:  ms
+
+
+RC173
+
+Acc/dec condition: correction constant for L-axis
+unit:  ms
+
+
+RC174
+
+Acc/dec condition: correction constant for U-axis
+unit:  ms
+
+
+RC175
+
+Acc/dec condition: correction constant for R-axis
+unit:  ms
+
+
+RC176
+
+Acc/dec condition: correction constant for B-axis
+unit:  ms
+
+
+RC177
+
+Acc/dec condition: correction constant for T-axis
+unit:  ms
+
+
+RC180
+
+Plugging motion control constant for S-axis
+unit:  x0.001
+
+RC181
+
+Plugging motion control constant for L-axis
+unit:  x0.001
+
+
+RC182
+
+Plugging motion control constant for U-axis
+unit:  x0.001
+
+
+RC183
+
+Plugging motion control constant for R-axis
+unit:  x0.001
+
+
+
+RC184
+
+Plugging motion control constant for B-axis
+unit:  x0.001
+
+
+RC185
+
+Plugging motion control constant for T-axis
+unit:  x0.001
+
+RC187
+
+? Angle check for positioning motion
+0: not available
+1: available
+
+
+RC188
+
+Minimum checking angle for positioning motion
+unit:  x0.001 degree
+
+
+RC189
+
+Maximum checking angle for positioning motion
+unit:  x0.001 degree
+
+
+RS000
+8
+Data bit length
+7: 7 bit
+8: 8 bit
+
+
+RS001
+0
+Stop bit length
+0:  1 bit
+1:  odd
+2:  even
+
+
+RS003
+64
+Baud rate [data x 150]
+(eg. 64x150=9600)
+
+
+RS004
+0
+Protocol designation
+
+
+RS006
+30
+Watchdog timer "a" Data sequence 
+x 0.1 s
+range: 0-100
+Protection for no or invalid response
+
+RS007
+200
+Watchdog timer "b" Data for text receive
+x 0.1 s
+range: 0-100
+Protection for not receiving the text end character
+
+
+RS008
+10
+Number of retry control characters (retry1)
+range: 0-30
+For no or invalid response
+
+
+RS009
+3
+Number or retry text (retry2)
+range: 0-10
+For receiving "Nack"
+
+
+RS010
+0
+Block check method
+
+SC000 - SC011
+57800
+SC000:  S-axis software limit in + direction
+57800
+SC001:  L-axis software limit in + direction
+81600
+SC002:  U-axis software limit in + direction
+20400
+SC003:  R-axis software limit in + direction
+16000
+SC004:  B-axis software limit in + direction
+20000
+SC005:  T-axis software limit in + direction
+11330
+SC006:  S-axis software limit in - direction
+-57800
+SC007:  L-axis software limit in - direction
+0
+SC008:  U-axis software limit in - direction
+-73100
+SC009:  R-axis software limit in - direction
+-16000
+SC010:  B-axis software limit in - direction
+-4000
+SC011:  T-axis software limit in - direction
+-11330
+
+unit for all of them:  pulse
+
+SC012
+20000
+B-axis motor limit in + direction
+unit:  pulse
+
+SC013
+11410
+T-axis motor limit in + direction
+unit:  pulse
+
+SC014
+-4000
+B-axis motor limit in - direction
+unit:  pulse
+
+SC015
+-11725
+T-axis motor limit in - direction
+unit: pulse
+
+SC016
+1500
+L-U maximum interference angle
+unit:  x0.1 degree
+
+SC017
+200
+L-U minimum interference angle
+unit:  x0.1 degree
+
+SC018:  +X base frame coordinate of the software limit cube
+35000
+unit:  x0.1 mm
+
+SC019:  +Y base frame coordinate of the software limit cube
+35000
+unit:  x0.1 mm
+
+SC020:  +Z base frame coordinate of the software limit cube
+35000
+unit:  x0.1 mm
+
+SC021:  -X base frame coordinate of the software limit cube
+-35000
+unit:  x0.1 mm
+
+SC022:  -Y base frame coordinate of the software limit cube
+-35000
+unit:  x0.1 mm
+
+SC023:  -Z base frame coordinate of the software limit cube
+-35000
+unit:  x0.1 mm
+
+SC024
+60000
+S-axis interference area in + direction
+unit:  pulse
+
+SC025
+-60000
+S-axis interference area in - direction
+unit:  pulse
+
+SC026:  +X base frame coordinate of the interference cube 1
+35000
+SC027:  +Y base frame coordinate of the interference cube 1
+35000
+SC028:  +Z base frame coordinate of the interference cube 1
+35000
+SC029:  -X base frame coordinate of the interference cube 1
+-35000
+SC030:  -Y base frame coordinate of the interference cube 1
+-35000
+SC031:  -Z base frame coordinate of the interference cube 1
+-35000
+SC032:  +X base frame coordinate of the interference cube 2
+35000
+SC033:  +Y base frame coordinate of the interference cube 2
+35000
+SC034:  +Z base frame coordinate of the interference cube 2
+35000
+SC035:  -X base frame coordinate of the interference cube 2
+-35000
+SC036:  -Y base frame coordinate of the interference cube 2
+-35000
+SC037:  -Z base frame coordinate of the interference cube 2
+-35000
+
+unit for all is pulse:  x0.1 mm
+
+SC038:  S-axis deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC039:  L-axis deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC040:  U-axis deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC041:  R-axis deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC042:  B-axis deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC043:  T-axis deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC044
+12500
+PL=1 positioning zone
+unit:  micron
+
+SC045
+25000
+PL=2 positioning zone
+unit:  micron
+
+SC046
+50000
+PL=3 positioning zone
+unit:  micron
+
+SC047
+100000
+PL=4 positioning zone
+unit:  micron
+
+SC050
+15000
+Play operation linear motion speed limit
+unit:  x0.1 mm/s
+
+
+SC051
+3600
+Play operation angular velocity limit for position changing
+unit:  x0.1 degrees/sec
+
+
+SC052
+2000
+Teach operation linear motion speed limit
+unit:  x0.1 mm/s
+
+
+SC053
+1500
+Teach operation angular velocity limit for position changing
+unit:  x0.1 degrees/sec
+
+
+SC054
+2000
+Teach operation joint motion speed limit
+unit:  x0.01% of max. pps
+
+
+SC055
+3000
+Acceleration/deceleration speed level
+unit:  x0.01% 0f SC050
+
+SC056
+2500
+Safety speed mode speed limit
+unit:  x0.01% of SC050
+range: 100-5000
+
+
+SC057
+1000
+Dry run speed limit
+unit:  x0.01% of SC050
+range:  100-5000
+
+SC060:  Teach record speed level 1 for MOVJ, MOVL, MOVC (x0.1 mm/s)
+110
+			   for MOVC (x0.1%)
+
+SC061:  Teach record speed level 2 for MOVJ, MOVL, MOVC (x0.1 mm/s)
+230
+			   for MOVC (x0.1%)
+
+SC062:  Teach record speed level 3 for MOVJ, MOVL, MOVC (x0.1 mm/s)
+460
+			   for MOVC (x0.1%)
+
+SC063:  Teach record speed level 4 for MOVJ, MOVL, MOVC (x0.1 mm/s)
+930
+			   for MOVC (x0.1%)
+
+SC064:  Teach record speed level 5 for MOVJ, MOVL, MOVC (x0.1 mm/s)
+1870
+			   for MOVC (x0.1%)
+
+SC065:  Teach record speed level 6 for MOVJ, MOVL, MOVC (x0.1 mm/s)
+3750
+			   for MOVC (x0.1%)
+
+SC066:  Teach record speed level 7 for MOVJ, MOVL, MOVC (x0.1 mm/s)
+7500
+			   for MOVC (x0.1%)
+
+SC067:  Teach record speed level 8 for MOVJ, MOVL, MOVC (x0.1 mm/s)
+15000
+			   for MOVC (x0.1%)
+
+SC068
+3
+SLU-axes path compensation offset
+unit:  pulse
+
+
+SC069
+3
+RBT-axes path compensation offset
+0
+unit:  pulse
+DON'T CHANGE
+
+SC070
+40
+Teach speed level "SLW"
+unit:  x0.1 mm/s
+
+SC071
+300
+Teach speed level "MID"
+unit:  x0.1 mm/s
+
+SC072
+1500
+Teach speed level "FST"
+unit:  x0.1 mm/s
+
+SC073
+3000
+Teach speed level "HIGH SPD"
+unit:  x0.1 mm/s
+
+SC074
+0
+U-B axis interference angle (max) for K205S
+
+
+SC075
+0
+U-B axis interference angle (min) for K205S
+
+
+SC076
+0
+L-axis interference checking start angle for K205S
+
+
+SC077
+0
+L-U axis interference angle for K205S
+
+
+SC078
+0
+S-L axis interference angle max.
+unit:  x0.1 degree
+only for s-type
+
+SC079
+0
+S-L axis interference angle min.
+unit:  x0.1 degree
+only for s-type
+
+SC080
+1500
+S-U axis interference checking angle for S-axis in + direction
+unit:  x0.1 degree
+
+SC081
+-1500
+S-U axis interference checking angle for S-axis in - direction
+unit:  x0.1 degree
+
+SC082
+1800
+S-U axis interference checking angle for U-axis in + direction
+unit:  x0.1 degree
+
+SC083
+-900
+S-U axis interference checking angle for U-axis in - direction
+unit:  x0.1 degree
+
+SC088:  +X base frame coordinate of the interference cube 3
+35000
+SC089:  +Y base frame coordinate of the interference cube 3
+35000
+SC090:  +Z base frame coordinate of the interference cube 3
+35000
+SC091:  -X base frame coordinate of the interference cube 3
+-35000
+SC092:  -Y base frame coordinate of the interference cube 3
+-35000
+SC093:  -Z base frame coordinate of the interference cube 3
+-35000
+SC094:  +X base frame coordinate of the interference cube 4
+35000
+SC095:  +Y base frame coordinate of the interference cube 4
+35000
+SC096:  +Z base frame coordinate of the interference cube 4
+35000
+SC097:  -X base frame coordinate of the interference cube 4
+-35000
+SC098:  -Y base frame coordinate of the interference cube 4
+-35000
+SC099:  -Z base frame coordinate of the interference cube 4
+-35000
+
+unit:  x0.1 mm
+
+SC100:  External axis -1 soft limit in + direction
+32500
+SC101:  External axis -2 soft limit in + direction
+32500
+SC102:  External axis -3 soft limit in + direction
+32500
+SC103:  External axis -4 soft limit in + direction
+32500
+SC104:  External axis -5soft limit in + direction
+32500
+SC105:  External axis -6 soft limit in + direction
+32500
+SC106:  External axis -1 soft limit in - direction
+-32500
+SC107:  External axis -2 soft limit in - direction
+-32500
+SC108:  External axis -3 soft limit in - direction
+-32500
+SC109:  External axis -4 soft limit in - direction
+-32500
+SC110:  External axis -5 soft limit in - direction
+-32500
+SC111:  External axis -6 soft limit in - direction
+-32500
+
+unit:  pulse
+
+SC112:  External axis -1 acceleration/deceleration
+250000
+unit:  pulse/s2
+
+SC113:  External axis -2 acceleration/deceleration
+250000
+unit:  pulse/s2
+
+SC114:  External axis -3 acceleration/deceleration
+250000
+unit:  pulse/s2
+
+SC115:  External axis -4 acceleration/deceleration
+250000
+unit:  pulse/s2
+
+SC116:  External axis -5 acceleration/deceleration
+250000
+unit:  pulse/s2
+
+SC117:  External axis -6 acceleration/deceleration
+250000
+unit:  pulse/s2
+
+SC118:  External axis -1 resolution
+60000
+SC119:  External axis -2 resolution
+60000
+SC120:  External axis -3 resolution
+60000
+SC121:  External axis -4 resolution
+60000
+SC122:  External axis -5 resolution
+60000
+SC123:  External axis -6 resolution
+60000
+
+rotating motion: pulses/360 degrees
+linear motion:   microns/motor rev
+
+After changing the parameter values, move the external rotating axis again to 
+make sure of rotating direction.  Then reset SC254%SC254 to 0.
+
+
+SC124:  External axis -1 Max pps
+25000
+unit:  pulse/s
+
+SC125:  External axis -2 Max pps
+25000
+unit:  pulse/s
+
+SC126:  External axis -3 Max pps
+25000
+unit:  pulse/s
+
+SC127:  External axis -4 Max pps
+25000
+unit:  pulse/s
+
+SC128:  External axis -5 Max pps
+25000
+unit:  pulse/s
+
+SC129:  External axis -6 Max pps
+25000
+unit:  pulse/s
+
+SC130:  External axis -1 motor rated speed
+3000
+unit:  rpm
+
+SC131:  External axis -2 motor rated speed
+3000
+unit:  rpm
+
+SC132:  External axis -3 motor rated speed
+3000
+unit:  rpm
+
+SC133:  External axis -4 motor rated speed
+3000
+unit:  rpm
+
+SC134:  External axis -5 motor rated speed
+3000
+unit:  rpm
+
+SC135:  External axis -6 motor rated speed
+3000
+unit:  rpm
+
+SC136:  External axis -1 feedback ppr
+500
+(4 x PG output pulses/motor rev)
+
+SC137:  External axis -2 feedback ppr
+500
+(4 x PG output pulses/motor rev)
+
+SC138:  External axis -3 feedback ppr
+500
+(4 x PG output pulses/motor rev)
+
+SC139:  External axis -4 feedback ppr
+500
+(4 x PG output pulses/motor rev)
+
+SC140:  External axis -5 feedback ppr
+500
+(4 x PG output pulses/motor rev)
+
+SC141:  External axis -6 feedback ppr
+500
+(4 x PG output pulses/motor rev)
+
+SC142:  External axis -1 saturation zone 
+3000
+unit:  pulse
+
+SC143:  External axis -2 saturation zone 
+3000
+unit:  pulse
+
+SC144:  External axis -3 saturation zone 
+3000
+unit:  pulse
+
+SC145:  External axis -4 saturation zone 
+3000
+unit:  pulse
+
+SC146:  External axis -5 saturation zone 
+3000
+unit:  pulse
+
+SC147:  External axis -6 saturation zone 
+3000
+unit:  pulse
+
+SC148:  External axis -1 position setting zone
+5
+unit: pulse
+
+SC149:  External axis -2 position setting zone
+5
+unit: pulse
+
+SC150:  External axis -3 position setting zone
+5
+unit: pulse
+
+SC151:  External axis -4 position setting zone
+5
+unit: pulse
+
+SC152:  External axis -5 position setting zone
+5
+unit: pulse
+
+SC153:  External axis -6 position setting zone
+5
+unit: pulse
+
+SC154:  External axis -1 alarm zone setting
+0
+SC155:  External axis -2 alarm zone setting
+0
+SC156:  External axis -3 alarm zone setting
+0
+SC157:  External axis -4 alarm zone setting
+0
+SC158:  External axis -5 alarm zone setting
+0
+SC159:  External axis -6 alarm zone setting
+0
+
+unit:  pulse
+0:  automatical set
+other:  set by value entered
+
+SC160:  External axis -1 servo gain
+150
+unit: x0.1
+
+SC161:  External axis -2 servo gain
+150
+unit: x0.1
+
+SC162:  External axis -3 servo gain
+150
+unit: x0.1
+
+SC163:  External axis -4 servo gain
+150
+unit: x0.1
+
+SC164:  External axis -5 servo gain
+150
+unit: x0.1
+
+SC165:  External axis -6 servo gain
+150
+unit: x0.1
+
+SC166:  External axis -1 deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC167:  External axis -2 deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC168:  External axis -3 deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC169:  External axis -4 deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC170:  External axis -5 deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC171:  External axis -6 deviation allowed after emergency stop and restart
+0
+unit:  pulse
+
+SC173
+0
+Ext axis 1-6, ext axis block allowable move after E-stop
+
+Conventional
+When the external block function is used, reactivation cannot be performed after emergency stop and an alarm occurs.  (Since axes which have block designation change some pulses from those at power off by emergency stop, alarm 1760 occurs when motion is attempted.)
+
+Improved Contents (Version 4.2)
+The external axis block allowable pulse value is set to this parameter and motion is possible in the moving amount of an axis with block designation is within the allowable value range.
+
+Set to any value
+
+
+SC180
+0
+A-1 axis motor limit in + direction 
+unit:  pulse
+
+
+SC181
+0
+A-1 axis motor limit in - direction
+unit:  pulse
+
+
+SC182
+0
+Cutting limit in + direction
+unit:  x0.1 degree
+
+
+
+SC183
+0
+Cutting limit in - direction
+unit:  x0.1 degree
+
+
+SC190
+0
+Ext axis drop value setting
+
+
+SC200
+0
+Return point after control power off-on
+0: address left by switch off
+1: line 0 of master job
+
+
+SC201
+0
+Return point after emergency stop-reset
+0: next step
+1: position at stop
+2: choose by soft key
+
+
+SC202
+0
+Initial operating speed set by editing
+0: set by soft key
+1: always by slow speed
+
+
+SC203
+0
+Speed dimension
+0: mm/s,  1: cm/min
+
+SC204
+0
+Execution step at one-step operation
+0: line to line
+1: step by step
+
+
+SC205
+0
+Start by operator's panel
+0: enable   1: disable
+
+
+
+SC206
+0
+Start by external input
+0: enable   1: disable
+
+
+SC207
+0
+skip points
+
+
+SC208
+0
+permits master application
+
+
+SC209
+0
+allows check mode
+
+SC210
+1
+Teach lock setting by teach box "enable" key
+0: automation   1: manual
+
+
+SC211
+30
+Teach-lock set time after depressing teach box "enable" key
+0: press "enable" continously
+1-254:255: "Lock on/off" by enable
+
+
+SC212
+0
+rectangular/cyclindrical frame setting
+0: rectangular   1: cyclindrical
+
+
+SC213
+30
+Inching motion amount for rect/cyl operation mode (mm)
+range: 0.01 - 2.55
+
+
+SC214
+3
+Inching motion amount for TCP constant operation mode (degree)
+range: 0.1 - 1.0
+
+SC215
+1
+Inching motion amount for link operation mode (pulse)
+range: 1 - 10
+
+
+SC216
+0
+Instructions executed at teach-box "next" key operation
+0:line by line
+1 step by step
+
+
+SC217
+0
+Instructions executed at teach box "next" + "addr" key operation
+0: all other tan MOV instr.
+1: all instr.
+2: only MOV instr.
+
+
+SC218
+0
+Teach box auto mode
+0: enable   1: disable
+
+
+SC219
+0
+orientation control during job operation
+0: no   1: yes
+
+SC220:  Output relay set for teach-box "1" key
+0
+SC221:  Output relay set for teach-box "2" key
+0
+SC222:  Output relay set for teach-box "3" key
+0
+SC223:  Output relay set for teach-box "4" key
+0
+SC224:  Output relay set for teach-box "5" key
+0
+SC225:  Output relay set for teach-box "6" key
+0
+SC226:  Output relay set for teach-box "7" key
+0
+SC227:  Output relay set for teach-box "8" key
+0
+
+range: 1-64
+
+SC228:  Operating mode of the relay set for teach-box "1" key
+0
+SC229:  Operating mode of the relay set for teach-box "2" key
+0
+SC230:  Operating mode of the relay set for teach-box "3" key
+0
+SC231:  Operating mode of the relay set for teach-box "4" key
+0
+SC232:  Operating mode of the relay set for teach-box "5" key
+0
+SC233:  Operating mode of the relay set for teach-box "6" key
+0
+SC234:  Operating mode of the relay set for teach-box "7" key
+0
+SC235:  Operating mode of the relay set for teach-box "8" key
+0
+
+0: on by "on",  off by "off"
+1: on by 1,  off by 2
+"ON"
+
+SC236
+64
+Output relay set for teach-box "F2" key
+range: 1-64
+
+
+SC237
+63
+Output relay set for teach-box "F3" key
+range: 1-64
+
+
+SC238
+0
+Default output setting after control power on
+0: all universe relays off
+1: return to the state at power off
+
+
+SC239
+0
+Terminal output when the I/O section is abnormal
+0: forced reset
+
+
+SC240
+0
+Operating mode for teach-box "F2" key
+0: on by "ON",  off by "OFF"
+1: on by 1,  off by 1
+"ON"
+
+SC241
+0
+Operating mode for teach-box "F3" key
+0: on by "ON",  off by "OFF"
+1: on by 1,  off by 1
+"ON"
+
+
+SC242
+0
+Restart enable after "hold" for special application output
+0: no   1: yes
+
+
+SC243
+0
+Locus controlling available
+0: no   1: yes
+
+
+SC244
+0
+Parity check for the universal input groups IG#01-IG#06 (byte)
+set by D0-D6; parity flag set by D7
+0: no    1: yes
+
+SC245
+0
+Parity check for the universal input group IG#07-IG#12 (byte)
+set by D0-D6;  parity flag set by D7
+0: no    1: yes
+
+
+SC246
+0
+Parity set for the universal output groups OG#01-OG#08 (byte)
+D7: parity flag
+
+
+SC247
+0
+Data type of the universal input group IG#01-IG#06 (byte)
+set bt D0-D6
+0: binary   1: BCD
+
+
+SC248
+0
+Data type of the universal input group IG#07-IG#12 (byte)
+set bt D0-D6
+0: binary   1: BCD
+
+
+SC249
+0
+Data type of the universal output group OG#01-OG#08 (byte)
+set bt D0-D7
+0: binary   1: BCD
+
+SC250
+0
+Controlled external axes (bytes)
+set by D0-D5
+0: no   1: yes
+
+(Version 4.3 or later)
+Setting of external axis
+
+SC251
+0
+Motor rotation derection setting for external axes (byte)
+set by D0-D5
+0: forward    1: reserve
+
+
+SC252
+0
+Position detector sign specification
+0: B-phase leading    1: A-phase leading
+DON'T CHANGE
+
+
+SC253
+0
+Using methods for external axis 1-3
+range: 0-7
+
+Value Setting	External Axis
+		x	y	z
+0		rot	rot	rot
+1		X	rot	rot
+2		Y	rot	rot
+3		Z	rot	rot
+4		X	Y	rot
+5		X	Z	rot
+6		Y	Z	rot
+7		X	Y	Z
+rot: rotating axis
+
+
+SC254
+0
+External axis turning angle display mode (byte)
+set by D0-D5
+0: degree enable    1: degree disable
+
+SC255
+0
+External axis travers shifting display mode (byte)
+set by D0-D5
+0: mm enable    1: mm disable
+
+
+SC256
+0
+Conveyor function control axis (external) definition (byte)
+set by D0-D5
+0: not connected     1: connected
+
+
+SC257
+1
+Available optional boards (byte)
+set by D0-D7
+0: no    1: yes
+DO:EW02; D1:EW03; D2:SL02; D4:x; D6:MM15B; D7:I/O
+
+
+SC258 - SC259
+0
+See "Moto-eye functional manual"
+
+
+SC260
+0
+Output relay set for teach-box "9" key
+range: 1-64
+
+SC261:  Output relay set for teach-box "10" key
+0
+range: 1-64
+
+SC262:  Output relay set for teach-box "11" key
+0
+range: 1-64
+
+SC263:  Output relay set for teach-box "12" key
+0
+range: 1-64
+
+SC264:  Output relay set for teach-box "13" key
+0
+range: 1-64
+
+SC265:  Output relay set for teach-box "14" key
+0
+range: 1-64
+
+SC266:  Output relay set for teach-box "15" key
+0
+range: 1-64
+
+SC267:  Output relay set for teach-box "16" key
+0
+range: 1-64
+
+SC268:  Operating mode of the relay set for teach-box "9" key
+0
+SC269:  Operating mode of the relay set for teach-box "10" key
+0
+SC270:  Operating mode of the relay set for teach-box "11" key
+0
+SC271:  Operating mode of the relay set for teach-box "12" key
+0
+SC272:  Operating mode of the relay set for teach-box "13" key
+0
+SC273:  Operating mode of the relay set for teach-box "14" key
+0
+SC274:  Operating mode of the relay set for teach-box "15" key
+0
+
+0: on by on, off by off
+1: on by 1, off by 2  "ON"
+
+
+
+SC280
+59
+Relay no. setting for hand 1 instruction
+
+
+SC281
+61
+relay no. setting for hand 2 instruction
+
+
+SC282
+93
+Confirmation relay number needed for hand 1 instruction
+
+
+SC283
+95
+Confirmation relay number needed for hand 2 instruction
+
+
+SC284
+0
+External axis block function (group 1 def) (byte)
+set by D0-D5
+0: not in group 1     1: in group 1
+
+
+SC285
+0
+External axis block function (group 2 def) (byte)
+set by D0-D5
+0: not in group 1     1: in group 1
+
+SC286
+0
+Input signal number for group 1
+
+
+SC287
+0
+Input signal number for group 2
+
+
+SC288
+0
+Insertion position for mov. instruction
+0: normal,    1: under the cursor
+
+
+SC290
+0
+User frame control point definition
+0: TCP,   1: external reference point
+
+
+SC291
+0
+Variable number designation for tool angle
+
+
+SC292
+0
+Output relay number for brwait instruction
+acknowledge for the external equipment (range)
+
+
+SC293
+0
+Input relay number for brake-on
+Start signal from the external equipment (range)
+
+
+SC294
+1
+Relative job shifting system oriented/step oriented
+0: system    1: step
+
+(Version 4.2 update)
+Concerning motion, the former step is changed.
+0: status reqauded more highly
+1: former step regarded more highly
+Initial value: 1
+
+
+SC296
+10
+PAM range variable
+See the position correction function during playback.
+
+The maximum value (1 to 255mm) of position changing range (delta X,Y,or Z).  The speed changing range is +-50%.
+
+
+SD000 - SD063
+188
+Available instructions (byte) set by D0-D7
+0: no     1: yes
+
+
+SD064
+3
+Available frames (byte)
+D0: tool      D1: user
+0: no         1: yes
+
+
+SD066
+1
+Available optional boards (byte)
+set by D0-D7
+0: no     1: yes
+DO:EW02, D1:EW03, D2:SV03, D3:SV03, D4:SL02
+D5:x, D6:MM15B, D7:I/O
+
+
+SD067
+0
+3D-shift available (byte)
+set by D0-D2
+0:no,    1:yes
+D0:3D shift,  D1:zeroing,  D2:mirror
+
+
+SD068
+0
+Concurrent I/O editing available
+0: no    1: yes
+
+
+
+SD070
+0
+search function available
+0:no  1:yes
+
+
+SD071
+0
+pulse weaving available
+0:no  1:yes
+
+
+SD072
+0
+multi layer welding available
+0:no  1:yes
+
+
+SD073
+0
+PMT function available
+0:no  1:yes
+
+
+SD074
+0
+TCP function available
+0:no  1:yes
+
+
+SD075
+0
+Interrupt job available
+0:no  1:yes
+
+
+SD076
+0
+Simple diagnostic function using available
+0:no  1:yes
+
+
+SD078
+0
+DCI function available
+0:no  1:yes
+
+
+SD079
+0
+Relative job function available
+0:no  1:yes
+
+
+SD080
+0
+Sensor function available (only for K10ASB)
+0:no  1:yes
+
+
+SD083
+0
+Lap search function available (only for COM-ARCII)
+0: no   1:yes
+
+
+SD084
+0
+External reference point control function available (play back)
+0:no  1:yes
+
+
+SD085
+0
+External reference point control function available (teaching)
+0:no  1:yes
+
+
+SD086
+1
+Endless rotation function for external axis available
+0:no  1:yes
+
+
+SD087
+1
+Tool angle setting function available
+0:no  1:yes
+
+
+SD088
+0
+Vision variable output available
+0:no  1:yes
+
+
+SD089
+0
+Position correction function available
+0:no  1:yes
+
+
+SD090
+1
+Tool overswing protection function at emergency stop available
+0:no  1:yes
+
+
+SD091
+1
+Parallel shift job function available
+0:no  1:yes
+
+
+SD093
+1
+PAM
+
+
+SD096
+13
+Teach-box function box for key F0.  Selected automatically.
+Can be chosen after system initialization.
+
+
+SD097
+14
+Teach-box function box for key F1.  Selected automatically.
+Can be chosen after system initialization.
+
+
+SD098
+11
+Teach-box function box for key F2.  Selected automatically.
+Can be chosen after system initialization.
+
+
+SD099
+12
+Teach-box function box for key F3.  Selected automatically.
+Can be chosen after system initialization.
+
+
+SD103
+1
+Number of position variable blocks
+1 block = 64 pos. variable
+(range: max. - 15)
+
+
+SD104
+0
+Special ladder program editing available
+
+
+SD105
+0
+Parameter value range check available
+0:no  1:yes
+
+
+SD106
+0
+Operator panel servo on button valid
+0:servo on valid
+1:servo on invalid
+
+
+SD110
+0
+Data communication function available
+0:no  1:yes
+
+
+SD142
+0
+3-D shift conventional shift/slave ref point used
+0:conventional
+1:slave ref. point
+
+
+SD144
+0
+Shortest path taken = 1
+
+
+SD146
+1
+Type of acceleration/deceleration procedure
+0:standard    1:not standard
+
+
+SD147
+0
+Number of advanced reading bank
+
+
+SD148
+0
+Number of advanced reading cue
+
+
+SD149
+2
+Application selection 
+selected automatically
+Can be chosen after system initialization.
+
+
+WE000
+0
+CH1 analog output signal range (EW02)
+0: -14.0 V to +14.0 V
+1: 0 V to 14.0 V
+2: -14.0V to 0V
+
+
+WE002
+0
+CH3 analog output signal range (EW02)
+0: -14.0 V to +14.0 V
+1: 0 V to 14.0 V
+2: -14.0V to 0V
+
+
+WE001
+0
+CH2 analog output signal range (EW02)
+0: -14.0 V to +14.0 V
+1: 0 V to 14.0 V
+2: -14.0V to 0V
+
+
+WE003
+0
+CH4 analog output signal range (EW02)
+0: -14.0 V to +14.0 V
+1: 0 V to 14.0 V
+2: -14.0V to 0V
+
+WE004
+0
+Welding condition definition method
+0:Uncovered (given in volts)
+1:covered (given in welding current (A) and voltage (v)
+
+
+SC413 to SC415
+
+General-purpose input number for synchronous control of two external axes of 
+patterns 1 through 3 (The axes are moved synchronously when the input is OFF.)
+Initial value:  0
+
+SC298
+0
+Specification of deviated position
+
+It is possible to specify whether deviated position is to be robot current (reference) position or feedback position. (Effective Version 4.2)
+
+0:  feedback position
+1:  current value (reference) position
+
+The following is recommended:
+Path work applications (arc, sealing): 0
+High-speed work application (spot, handling): 1
+
+
+
+SC289
+0
+
+Conventional
+In the analog output function corresponding to speed, linear speed in motion is 
+calculated in accordance with control point moving amount.  Therefore, when the 
+manipulator operates at a high speed, linear speed is not stable even in the 
+constant speed area.  This results in unstable analog output.
+
+Improved Contents (After version 4.2)
+To make anaolog output stable in the constant speed area, it is necessary to 
+change the speed control method internally.  Therefore, when analog output 
+function corresponding to speed is used, the speed control method can be 
+changed by setting this parameter.
+
+Accel/Decel process designation for each function
+0:  standard
+1: other than standard
+
+Set to 1
+
+
+
+Variable no. designation in handling diagnosis display
+
+ME011 - display 1 variable specified by 0 to 99
+0
+ME012 - display 2 variable specified by 0 to 99
+0
+ME013 - display 3 variable specified by 0 to 99
+0
+ME014 - display 4 variable specified by 0 to 99
+0
+ME015 - display 5 variable specified by 0 to 99
+0
+ME016 - display 6 variable specified by 0 to 99
+0
+ME017 - display 7 variable specified by 0 to 99
+0
+ME018 - display 8 variable specified by 0 to 99
+0
+
+
+
+Variable designation in handling diagnosis display
+
+Display 1 to 8 variable designation (B/I variable bit designation)
+
+The number of variables to be displayed is up to 8 and are displayed at the display lines of "Num of palletized works line 1" to "total num. of each rot line 4".
+
+Set ME010 D0 bit
+D0 (Bit designation: OFF:BYTE  ON:INIT)
+128  64  32  16  8  4  2  1
+  |       |     |     |    |    |   |    |_____display 1
+  |       |     |     |    |    |   |_______display 2
+  |       |     |     |    |    |_________display 3
+  |       |     |     |    |___________display 4
+  |       |     |     |_____________display 5
+  |       |     |________________display 6
+  |       |___________________display 7
+  |_______________________display 8
+
+
+
+RS002
+2
+Parity check
+0: 1 bit
+1: odd
+2: evem
+
+SC172
+0
+External axis 1-6 path compensation offset (pulse).  If using traveling axis for cutting
+is the same as SC068%SC068 (from version 2.5).
+
+
+
+finished input file

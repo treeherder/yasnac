@@ -42,6 +42,8 @@ def namefix(filename, filedata):
     """
     make sure that if a jobname appears in the job file, the jobname matches
     the file's filename. log any corrections to stdout
+    
+    side effect: this function ensures proper \r\n line endings
     """
     expected_jobname = os.path.splitext(filename)[0]
     expected_entry = "//NAME {}".format(expected_jobname)
@@ -69,7 +71,7 @@ class SoftFC1(object):
                                  parity=serial.PARITY_EVEN, timeout=None)
         sleep(1)  # wait for the port to be ready (an arbitrary period)
         log("opened serial port")
-        self.input_packets = self.input_packet_streamer()
+        self.input_packets = self.input_packet_streamer()  # generator instance
         self.filelist = filelist
         self.overwrite = overwrite
 

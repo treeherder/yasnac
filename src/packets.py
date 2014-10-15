@@ -48,6 +48,6 @@ def decode(packet):
         raise ValueError("Invalid packet! Checksum fail: {} != {}".format(
             stated_checksum.__repr__(), calc_checksum.__repr__()))
     # return a list of packets, excluding the size bytes at the beginning of
-    # each payload
+    # each payload, and the length of the packet
     return (payload[2:], length + 5)
 

@@ -23,4 +23,5 @@ A server that provides a serial emulation of the YASNAC FC1 floppy disk drive.
 
 ## Todo
 
-Go back and add some tests afterward.
+- add some tests
+- disk: create a new exception specifically for the cancel message. IOError is the wrong answer for such a large diverse block 

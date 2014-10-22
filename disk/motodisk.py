@@ -41,9 +41,9 @@ def chunks(iterable, chunksize):
 def namefix(filename, filedata):
     """
     make sure that if a jobname appears in the job file, the jobname matches
-    the file's filename. log any corrections to stdout
+    the jobs's filename. log any corrections to stdout
     
-    side effect: this function ensures proper \r\n line endings
+    WARNING: side effect: this function ensures proper \r\n line endings
     """
     expected_jobname = os.path.splitext(filename)[0]
     expected_entry = "//NAME {}".format(expected_jobname)
@@ -71,7 +71,7 @@ class SoftFC1(object):
                                  parity=serial.PARITY_EVEN, timeout=None)
         sleep(1)  # wait for the port to be ready (an arbitrary period)
         log("opened serial port")
-        self.input_packets = self.input_packet_streamer()  # generator instance
+        self.input_packets = self.input_packet_streamer()  # NOTE: generator
         self.filelist = filelist
         self.overwrite = overwrite
 
@@ -88,7 +88,7 @@ class SoftFC1(object):
         return result
 
     def raw_write(self, message):
-        """ Send a raw packet on the serial port """
+        """ Send raw data on the serial port """
         self.com.write(message)
         warn("raw_write {} bytes: {}".format(len(message),
                                              message.__repr__()))
@@ -105,6 +105,7 @@ class SoftFC1(object):
             packet = next(self.input_packets)
             if packet == "ACK":
                 message_received = True
+                break
             elif packet == "CAN":
                 raise IOError(warn("ERC sent CANcel during confirmed write"))
             else:
@@ -130,7 +131,7 @@ class SoftFC1(object):
                 parse_buffer = parse_buffer[bytes_consumed:]
                 yield data
             except packets.InvalidPacketHeader:
-                # slide out a byte of unuseable data
+                # slide out a byte of unusable data
                 parse_buffer.pop(0)
             except packets.NeedMoreInput:
                 # get some more data from the serial
@@ -148,7 +149,7 @@ class SoftFC1(object):
                     self.write('ACK')
                     continue
 
-                if packet == "EOT":
+                if packet == 'EOT':
                     warn("Received EndOfTransmission packet")
                     continue
 
@@ -183,7 +184,7 @@ class SoftFC1(object):
                     self.write("EOF")
                     continue
 
-                if packet.startswith("FRD"):
+                if packet.startswith('FRD'):
                     warn("Responding to FileReaD packet")
                     filename = packet[3:].rstrip()
                     if self.filelist and filename not in self.filelist:
@@ -201,7 +202,7 @@ class SoftFC1(object):
                     self.write("EOF")
                     continue
 
-                if packet.startswith("FWT"):
+                if packet.startswith('FWT'):
                     warn("Responding to FileWriTe packet")
                     filename = packet[3:].rstrip()
                     if not self.overwrite and os.path.exists(filename):
@@ -244,6 +245,8 @@ def main():
     primary handler for command-line execution. return an exit status integer
     or a bool type (where True indicates successful exection)
     """
+    global DEBUG
+
     argp = argparse.ArgumentParser(description=(
         "MotoDisk: a software emulator for the YASNAC FC1 floppy disk drive"))
     argp.add_argument('-d', '--debug', action="store_true", help=(
@@ -266,13 +269,7 @@ def main():
 
 
 if __name__ == '__main__':
-    EXIT_STATUS = True
-    DEBUG = False
-
     try:
-        EXIT_STATUS = main()
+        main()
     except KeyboardInterrupt:
         warn("Exiting due to keyboard interrupt (Ctrl-C)", force=True)
-
-    sys.exit(int(not EXIT_STATUS if isinstance(EXIT_STATUS, bool)
-                 else EXIT_STATUS))

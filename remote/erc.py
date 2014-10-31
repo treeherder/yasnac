@@ -375,11 +375,12 @@ class ERC(object):
     def handshake(self, active=True):
         """ Ping the robot """
         if active:
-            # send then listen
+            # send ENQ then listen for an ACK0/ACK1
             self.raw_write(ENQ)
             
         raw_packet = self.raw_read()
-
+        
+        # if we sent an ENQ, we expect ACK0/ACK1. otherwise we should see ENQ
         expected_input = self.return_ack() if active else ENQ
         
         if raw_packet != expected_input:
@@ -418,8 +419,7 @@ class ERC(object):
                 confirmed = True
             else:
                 print "wrong ack, got {} expected {}".format(
-                    raw_packet.__repr__(), expected_ack.__repr__()
-                )
+                    raw_packet.__repr__(), expected_ack.__repr__())
         return confirmed
 
     def handle_incoming_file(self, header, message):
@@ -495,7 +495,7 @@ class ERC(object):
         return self.servo_power(False)
 
     def servo_power(self, power=True):
-        """ EXPERIMENTAL: tell the ERC to turn on the servos """
+        """ EXPERIMENTAL: tell the ERC to turn on/off the servos """
         self.system_control_command("SVON {}\r".format("1" if power else "0"))
 
     def start(self, job=None):

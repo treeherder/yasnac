@@ -471,57 +471,40 @@ class ERC(object):
         # fixme: safety-check the filename
         if not os.path.exists(filename):
             pass
-    
+        # fixme: finish this!
+        
+    def system_control_command(self, command_string):
+        """ Issue a system control command """
+        self.handshake()
+        self.confirmed_write(encode("01,000", command_string)[0])
+        self.handle_eot(write=True)
+        self.handshake(active=False)
+        raw_packet = self.raw_read()
+        packet = decode(raw_packet)
+        if packet.header != "90,000" or packet.body != '0000\r':
+            warn("expected 90,000 with 0000, got {}".format(packet))
+        self.send_ack()
+        self.handle_eot(read=True)
+
     def servos_on(self):
-        """ Shorthand for servo_power(on=True) """
+        """ Shorthand for servo_power(True) """
         return self.servo_power(True)
 
     def servos_off(self):
-        """ Shorthand for servo_power(on=False) """
+        """ Shorthand for servo_power(False) """
         return self.servo_power(False)
-    
+
     def servo_power(self, power=True):
         """ EXPERIMENTAL: tell the ERC to turn on the servos """
-        self.handshake()
-        self.confirmed_write(encode("01,000", "SVON {}\r".format(
-            "1" if power else "0"))[0])
-        self.handle_eot(write=True)
-        self.handshake(active=False)
-        packet = decode(self.raw_read())
-        if packet.header != "90,000" or packet.body != '0000\r':
-            raise InvalidTransaction("expected 90,000 with 0000, got {}".format(
-              packet))
-        self.send_ack()
-        self.handle_eot(read=True)
+        self.system_control_command("SVON {}\r".format("1" if power else "0"))
 
-    def start(self, command=None):
+    def start(self, job=None):
         """ EXPERIMENTAL: tell the ERC to run a job """
-        self.handshake()
-        self.confirmed_write(encode("01,000", "START {}\r".format(
-            command if command else ""))[0])
-        self.handle_eot(write=True)
-        self.handshake(active=False)
-        packet = decode(self.raw_read())
-        if packet.header != "90,000" or packet.body != '0000\r':
-            raise InvalidTransaction("expected 90,000 with 0000, got {}".format(
-              packet))
-        self.send_ack()
-        self.handle_eot(read=True)
+        self.system_control_command("START {}\r".format(job if job else ""))
 
     def hold(self, hold=True):
         """ EXPERIMENTAL: tell the ERC to stop or clear the stop flag """
-        self.handshake()
-        self.confirmed_write(encode("01,000", "START {}\r".format(
-            "1" if hold else "0"))[0])
-        self.handle_eot(write=True)
-        self.handshake(active=False)
-        packet = decode(self.raw_read())
-        if packet.header != "90,000" or packet.body != '0000\r':
-            raise InvalidTransaction("expected 90,000 with 0000, got {}".format(
-              packet))
-        self.send_ack()
-        self.handle_eot(read=True)
-
+        self.system_control_command("HOLD {}\r".format("1" if hold else "0"))
 
     def loop(self):
         while True:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-motocommand: Connect to a YASNAC ERC and send a system control command(s)
+motocommand: Connect to a YASNAC ERC and send system control command(s)
 """
 import argparse
 import sys

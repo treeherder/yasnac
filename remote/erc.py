@@ -1,5 +1,10 @@
-    #!/usr/bin/env python
-""" Library for communicating with a YASNAC ERC-series robot """
+#!/usr/bin/env python
+"""
+Library for communicating with a YASNAC ERC-series robot
+
+The erc serial protocol is *very* similar to:
+https://en.wikipedia.org/wiki/Binary_Synchronous_Communications
+"""
 import struct
 import sys
 import time
@@ -9,42 +14,23 @@ import os
 import serial
 
 
+# general global constants
 DEBUG = True
 
-# The erc serial protocol is *very* similar to:
-# https://en.wikipedia.org/wiki/Binary_Synchronous_Communications
-
+# ERC communication constants
 SOH = chr(0x01)  # Start Of Heading: denotes the start of the message heading
-                 # data block
-
-STX = chr(0x02)  # Start Of Text: denotes end of heading and beginning of
-                 # information data
-
-ETX = chr(0x03)  # End Of Text: signals receiving station that all payload
-                 # data has been transmitted
-
-EOT = chr(0x04)  # End Of Transmission: indicates the end of transmission of
-                 # all data associated with a message.
-
-ENQ = chr(0x05)  # Enquiry: requests a response from the receiving station.
-
-DLE = chr(0x10)  # Data Link Escape: is used to modify the meaning of a
-                 # limited number of subsequent characters.
-
-NAK = chr(0x15)  # Negative Acknowledge: indicates improper communication.
-
-ETB = chr(0x17)  # End of Transmission Block: indicates the end of a
-                 # particular block of transmitted data. ETB is used in place
-                 # of ETX when data are transmitted in two or more blocks.
-
+STX = chr(0x02)  # Start Of Text: denotes end of heading and beginning of data
+ETX = chr(0x03)  # End Of Text: signals that all payload data has been sent
+EOT = chr(0x04)  # End Of Transmission: indicates the end of transmission
+ENQ = chr(0x05)  # Enquiry: requests a response from the receiving station
+DLE = chr(0x10)  # Data Link Escape: modifies the meaning of a subsequent chars
+NAK = chr(0x15)  # Negative Acknowledge: indicates improper communication
+ETB = chr(0x17)  # End of Transmission Block: used in place of ETX to indicate
+                 # that there are more message blocks for the current message
 ACK0 = DLE + chr(0x30)  # Even acknowledgment
-
 ACK1 = DLE + chr(0x31)  # Odd acknowledgment
-
 WACK = DLE + chr(0x6b)  # Wait acknowledgement
-
-RVI = DLE + chr(0x7c)  # Reverse interrupt
-
+RVI = DLE + chr(0x7c)   # Reverse interrupt
 TTD = STX + ENQ  # Temporary transmission delay
 
 CONTROL_CHARS = {
@@ -64,6 +50,7 @@ CONTROL_CHARS = {
 }
 
 TRANSACTIONS = {
+    # how we issue commands to the robot
     '01,000': 'command from remote computer',
 
     # job and special system files - transmission
@@ -88,7 +75,7 @@ TRANSACTIONS = {
     '02,061': 'WEAV.DAT - request for weave data',
     '02,062': 'TOOL.DAT - request for tool data',
     '02,063': 'UFRAME.DAT - request for user coordinate data',
-    '02,064': 'ABSWELD.DAT - request for welder condition data',  # undocumented
+    '02,064': 'ABSWELD.DAT - request for welder condition data',  # undoc'd
     '02,065': 'CV.DAT - request for conveyer condition',
     '02,066': 'SENSOR.DAT - request for locus correction condition data',
     '02,067': 'COMARC2.DAT - request for COM-ARC2 condition data',
@@ -129,7 +116,7 @@ ERRORS = {
     '1011': 'command operand number failure',
     '1012': 'command operand value excessive',
     '1013': 'command operand length failure',
-    
+
     # 2xxx - command execution mode error
     '2010': 'during robot operation',
     '2020': 'during T-PENDANT',
@@ -138,13 +125,13 @@ ERRORS = {
     '2050': 'during command HOLD',
     '2060': 'during error alarm',
     '2070': 'in servo OFF or stopping by a panel HOLD',
-    
+
     # 3xxx - command execution error
     '3010': 'servo power on',
     '3040': 'set home position',
     '3070': 'current position is not input',
     '3080': 'END command of job (except master job)',
-    
+
     # 4xxx - job registration error
     '4010': 'shortage of memory capacity (job registration)',
     '4012': 'shortage of memory capacity (position data registration)',
@@ -159,7 +146,7 @@ ERRORS = {
     '4190': 'unsuitable characters in job name exist',
     '4200': 'unsuitable characters in job name exist',
     '4230': 'instructions which cannot be used by this system exist',
-    
+
     # 5xxx - file text error
     '5110': 'instruction syntax error',
     '5120': 'position data fault',
@@ -174,22 +161,27 @@ Packet = collections.namedtuple("Packet", 'body header footer packet_length')
 
 
 class InvalidPacketStart(Exception):
+    """ The packet does not start with SOH nor STX """
     pass
 
 
 class InvalidPacketNeedMore(Exception):
+    """ The packet appears to be incomplete """
     pass
 
 
 class InvalidPacketBody(Exception):
+    """ Neither ETX nor ETB could be found & the packet is at max length """
     pass
 
 
 class InvalidPacketChecksum(Exception):
+    """ The given checksum value doesn't match the actual checksum value """
     pass
 
 
 class InvalidTransaction(Exception):
+    """ General communications failure, expected IO did not happen """
     pass
 
 
@@ -216,6 +208,7 @@ def chunks(iterable, chunksize):
     for i in xrange(0, len(iterable), chunksize):
         yield iterable[i:i+chunksize]
 
+
 def multifind(haystack, needles, start=None, end=None):
     """
     like string.find, except the search term is a list of searches that will
@@ -223,15 +216,24 @@ def multifind(haystack, needles, start=None, end=None):
     if no match is found, -1 will be returned
     """
     for index, char in enumerate(haystack):
+        # fixme: test this next conditional properly
+        if not start <= index <= end:
+            continue
         if char in needles:
             return index
     return -1
+
 
 def checksum(packet, stop, start=1):
     """ Return the checksum for the given packet """
     return sum([ord(c) for c in packet[start:stop]])
 
+
 def encode(transaction_code, body):
+    """
+    return a list of raw packet strings which represent the given
+    transaction_code and body
+    """
     # return a list of packets to send, based on the given code and body
     body_chunks = list(chunks(body, 256))
     chunk_count = len(body_chunks)
@@ -242,7 +244,7 @@ def encode(transaction_code, body):
                       ETB if chunk_count > 1 else ETX])
     packet += struct.pack("<H", checksum(packet, len(packet) + 2))
     result.append(packet)
-    
+
     # ...and now the rest
     for index, chunk in enumerate(body_chunks):
         packet = "".join([STX, chunk, ETB if index < chunk_count else ETX])
@@ -251,8 +253,11 @@ def encode(transaction_code, body):
 
     return result
 
+
 def decode(packet):
-    """ read packet data from the input buffer and return decoded data """
+    """
+    return a Packet object containing the decoded contents of the given packet
+    """
     if packet.startswith(SOH):
         header_bytes = 8
         header = struct.unpack("c6sc", packet[0:header_bytes])[1]
@@ -270,18 +275,12 @@ def decode(packet):
                          end=max_search_length)
     if body_end < 0:
         if len(packet) < max_search_length:
-            raise NeedMoreData
+            raise InvalidPacketNeedMore
         else:
             raise InvalidPacketBody
 
     body = packet[header_bytes:body_end]
     packet_length = body_end + 3
-    # For your use while debugging:
-    # warn("body {}".format(body.__repr__()))
-    # warn("body_end {}".format(body_end))
-    # warn("packet_length {}".format(packet_length))
-    # warn("included body {}".format(packet[body_end:packet_length].__repr__()))
-    # warn("checksum body {}".format(packet[1:packet_length].__repr__()))
     footer = struct.unpack("<cH", packet[body_end:packet_length])
     calculated_checksum = checksum(packet, packet_length - 2)
     if footer[1] != calculated_checksum:
@@ -291,12 +290,14 @@ def decode(packet):
 
 
 def test():
+    """ temporary development function """
     warn("entering erc comms loop")
-    x=ERC()
-    x.loop()
+    robot = ERC()
+    robot.loop()
 
 
 class ERC(object):
+    """ Interface to the yasnac ERC series robots """
     handlers = None
     link = None
     ack_bit = False
@@ -322,7 +323,7 @@ class ERC(object):
         self.link = serial.Serial(port='/dev/ttyS0',
                                   baudrate=9600,
                                   bytesize=8,
-                                  parity=serial.PARITY_EVEN, 
+                                  parity=serial.PARITY_EVEN,
                                   stopbits=serial.STOPBITS_ONE,
                                   timeout=None)
         self.ack_bit = False
@@ -344,53 +345,53 @@ class ERC(object):
         self.link.write(message)
         warn("raw_write {} bytes: {}".format(len(message),
                                              message.__repr__()))
-    
-    def send_ack(self):
-        """
-        Send the appropriate ACK message, which alternates between ACK0 and ACK1
-        """
-        self.raw_write(self.return_ack())
 
-    def return_ack(self):
+    def current_ack(self):
         """ Return the appropriate ACK message to the calling function """
         result = ACK1 if self.ack_bit else ACK0
         self.ack_bit = not self.ack_bit
         return result
 
-    def handle_eot(self, write=False, read=False):
-        """ handle an EOT, which resets the ACK bit """
-        if read:
+    def send_ack(self):
+        """
+        Send the appropriate ACK message; it alternates between ACK0 and ACK1
+        """
+        self.raw_write(self.current_ack())
+
+    def send_eot(self):
+        """ send an EOT control character, which resets the ACK bit """
+        self.raw_write(EOT)
+        self.ack_bit = False
+
+    def receive_eot(self, read_from_wire=True):
+        """ receive an EOT control character, which resets the ACK bit """
+        if read_from_wire:
             # There should be an EOT on the wire. Drain it.
             raw_packet = self.raw_read()
             if raw_packet != EOT:
                 raise InvalidTransaction("Expected EOT, got {}".format(
                     raw_packet.__repr__()))
-
-        if write:
-            self.raw_write(EOT)
-
         self.ack_bit = False
 
-
-    def handshake(self, active=True):
+    def send_handshake(self):
         """ Ping the robot """
-        if active:
-            # send ENQ then listen for an ACK0/ACK1
-            self.raw_write(ENQ)
-            
+        # send ENQ then listen for an ACK0/ACK1
+        self.raw_write(ENQ)
+        expected_reply = self.current_ack()
         raw_packet = self.raw_read()
-        
-        # if we sent an ENQ, we expect ACK0/ACK1. otherwise we should see ENQ
-        expected_input = self.return_ack() if active else ENQ
-        
+        if raw_packet != expected_reply:
+            raise InvalidTransaction("Expecting {}, got {}".format(
+                expected_reply.__repr__(), raw_packet.__repr__()))
+        return True
+
+    def receive_handshake(self):
+        """ Ping the robot """
+        expected_input = ENQ
+        raw_packet = self.raw_read()
         if raw_packet != expected_input:
             raise InvalidTransaction("Expecting {}, got {}".format(
                 expected_input.__repr__(), raw_packet.__repr__()))
-        
-        if not active:
-            # We heard an ENQ, now we send the ack
-            self.send_ack()
-        
+        self.send_ack()
         return True
 
     def read_multipacket_message(self):
@@ -404,7 +405,7 @@ class ERC(object):
             self.send_ack()
             if packet.footer[0] == ETX:
                 break
-        self.handle_eot(read=True)
+        self.receive_eot()
         warn("MULTIPACKET DRAIN COMPLETE")
         return result
 
@@ -413,7 +414,7 @@ class ERC(object):
         confirmed = False
         while not confirmed:
             self.raw_write(packet)
-            expected_ack = self.return_ack()
+            expected_ack = self.current_ack()
             raw_packet = self.raw_read()
             if raw_packet == expected_ack:
                 confirmed = True
@@ -429,29 +430,27 @@ class ERC(object):
         - send a properly formatted reply message to the yasnac
         """
         payload = message.splitlines()
-        
+
         if header == '02,001':
             filename_extension = "JBI"  # independent job data
         elif header == '02,002':
             filename_extension = "JBR"  # related (master) job data
         else:
             filename_extension = "DAT"
-        
+
         filename = "{}.{}".format(payload.pop(0), filename_extension)
-        
+
         # Write the file
         # fixme: safety-check the filename
         with open(filename, "w") as fileout:
             fileout.write("\r".join(payload) + "\r")
-        
-        # The machine should have hung up already
-        self.handshake()
-        
+
+        # The machine should have hung up
+        self.send_handshake()
+
         # Now we send back the higher-level transfer confirmation...
         self.confirmed_write(encode("90,000", "0000\r")[0])
-        
-        self.handle_eot(write=True)
-        
+        self.send_eot()
         return (filename, "\r".join(payload))
 
     def handle_file_request(self, header, message):
@@ -459,7 +458,7 @@ class ERC(object):
         Handle a request for a file.
         - load the file from disk
         - send the proper replies
-        """        
+        """
         if header == '02,051':
             filename_extension = "JBI"  # independent job data
         elif header == '02,052':
@@ -471,20 +470,20 @@ class ERC(object):
         # fixme: safety-check the filename
         if not os.path.exists(filename):
             pass
+            # so we need to send 90,000 with a 4 digit error... but which one?
         # fixme: finish this!
-        
+
     def system_control_command(self, command_string):
         """ Issue a system control command """
-        self.handshake()
+        self.send_handshake()
         self.confirmed_write(encode("01,000", command_string)[0])
-        self.handle_eot(write=True)
-        self.handshake(active=False)
-        raw_packet = self.raw_read()
-        packet = decode(raw_packet)
+        self.send_eot()
+        self.receive_handshake()
+        packet = decode(self.raw_read())
         if packet.header != "90,000" or packet.body != '0000\r':
             warn("expected 90,000 with 0000, got {}".format(packet))
         self.send_ack()
-        self.handle_eot(read=True)
+        self.receive_eot()
 
     def servos_on(self):
         """ Shorthand for servo_power(True) """
@@ -507,6 +506,7 @@ class ERC(object):
         self.system_control_command("HOLD {}\r".format("1" if hold else "0"))
 
     def loop(self):
+        """ A continuous event loop for handling ERC serial IO """
         while True:
             raw_packet = self.raw_read()
 
@@ -517,9 +517,9 @@ class ERC(object):
 
             if raw_packet == EOT:
                 warn("received EOT")
-                self.handle_eot()
+                self.receive_eot(False)
                 continue
-            
+
             if not raw_packet.startswith(SOH):
                 warn("No handler for packet {}".format(raw_packet.__repr__()))
                 continue
@@ -538,12 +538,11 @@ class ERC(object):
                 message += self.read_multipacket_message()
 
             if packet.header in self.handlers:
-                warn("handled packet(s), result was: {}".format(
+                log("handled packet(s), result was: {}".format(
                     self.handlers[packet.header](packet.header, message)))
                 continue
             else:
                 warn("Don't know how to handle code {}".format(packet.header))
 
             warn("received {} message: {}".format(TRANSACTIONS[packet.header],
-                                                   message.__repr__()))
-            
+                                                  message.__repr__()))

@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+"""
+motocommand: Connect to a YASNAC ERC and send a system control command(s)
+"""
+import argparse
+import sys
+
+import erc
+
+
+def main():
+    """
+    primary function for command-line execution. return an exit status integer
+    or a bool type (where True indicates successful exection)
+    """
+    argp = argparse.ArgumentParser(description=(
+        "Connect to a YASNAC ERC and send system control command(s)"))
+    argp.add_argument('command', nargs="+", help=(
+        "A command to send to the ERC controller"))
+    args = argp.parse_args()
+
+    # now actually do stuff
+    robot = erc.ERC()
+    for command in args.commands:
+        robot.system_control_command(command + "\r")
+
+    return True
+
+
+if __name__ == '__main__':
+    RESULT = main()
+    sys.exit(int(not RESULT if isinstance(RESULT, bool) else RESULT))

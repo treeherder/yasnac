@@ -277,11 +277,11 @@ def decode(packet):
     body = packet[header_bytes:body_end]
     packet_length = body_end + 3
     # For your use while debugging:
-    # print "body {}".format(body.__repr__())
-    # print "body_end {}".format(body_end)
-    # print "packet_length {}".format(packet_length)
-    # print "included body {}".format(packet[body_end:packet_length].__repr__())
-    # print "checksum body {}".format(packet[1:packet_length].__repr__())
+    # warn("body {}".format(body.__repr__()))
+    # warn("body_end {}".format(body_end))
+    # warn("packet_length {}".format(packet_length))
+    # warn("included body {}".format(packet[body_end:packet_length].__repr__()))
+    # warn("checksum body {}".format(packet[1:packet_length].__repr__()))
     footer = struct.unpack("<cH", packet[body_end:packet_length])
     calculated_checksum = checksum(packet, packet_length - 2)
     if footer[1] != calculated_checksum:
@@ -291,7 +291,7 @@ def decode(packet):
 
 
 def test():
-    print "entering erc comms loop"
+    warn("entering erc comms loop")
     x=ERC()
     x.loop()
 
@@ -399,13 +399,13 @@ class ERC(object):
         while True:
             raw_packet = self.raw_read()
             packet = decode(raw_packet)
-            print "DRAINING MULTIPACKET {}".format(packet.header)
+            warn("DRAINING MULTIPACKET {}".format(packet.header))
             result += packet.body
             self.send_ack()
             if packet.footer[0] == ETX:
                 break
         self.handle_eot(read=True)
-        print "DRAIN COMPLETE"
+        warn("MULTIPACKET DRAIN COMPLETE")
         return result
 
     def confirmed_write(self, packet):
@@ -418,8 +418,8 @@ class ERC(object):
             if raw_packet == expected_ack:
                 confirmed = True
             else:
-                print "wrong ack, got {} expected {}".format(
-                    raw_packet.__repr__(), expected_ack.__repr__())
+                warn("wrong ack, got {} expected {}".format(
+                    raw_packet.__repr__(), expected_ack.__repr__()))
         return confirmed
 
     def handle_incoming_file(self, header, message):
@@ -516,18 +516,18 @@ class ERC(object):
                 continue
 
             if raw_packet == EOT:
-                print "received EOT"
+                warn("received EOT")
                 self.handle_eot()
                 continue
             
             if not raw_packet.startswith(SOH):
-                print "No handler for packet {}".format(raw_packet.__repr__())
+                warn("No handler for packet {}".format(raw_packet.__repr__()))
                 continue
 
             # parsed packet handlers (packet begins with SOH)
             packet = decode(raw_packet)
 
-            print "packet header: {}".format(packet.header)
+            warn("packet header: {}".format(packet.header))
 
             message = packet.body
             self.send_ack()
@@ -538,12 +538,12 @@ class ERC(object):
                 message += self.read_multipacket_message()
 
             if packet.header in self.handlers:
-                print "handled packet(s), result was: {}".format(
-                    self.handlers[packet.header](packet.header, message))
+                warn("handled packet(s), result was: {}".format(
+                    self.handlers[packet.header](packet.header, message)))
                 continue
             else:
-                print "Don't know how to handle code {}".format(packet.header)
+                warn("Don't know how to handle code {}".format(packet.header))
 
-            print "received {} message: {}".format(TRANSACTIONS[packet.header],
-                                                   message.__repr__())
+            warn("received {} message: {}".format(TRANSACTIONS[packet.header],
+                                                   message.__repr__()))
             

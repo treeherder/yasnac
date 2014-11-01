@@ -209,12 +209,14 @@ def chunks(iterable, chunksize):
         yield iterable[i:i+chunksize]
 
 
-def multifind(haystack, needles, start=None, end=None):
+def multifind(haystack, needles, start=0, end=None):
     """
     like string.find, except the search term is a list of searches that will
     be tried in sequence. the index of the first found match will be returned.
     if no match is found, -1 will be returned
     """
+    if end is None:
+        end = len(haystack)
     for index, char in enumerate(haystack):
         # fixme: test this next conditional properly
         if not start <= index <= end:

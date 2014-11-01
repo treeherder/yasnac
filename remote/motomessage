@@ -26,7 +26,7 @@ def main():
             "message is {} characters.").format(len(args.message)))
 
     robot = erc.ERC()
-    robot.system_control_command("MDSP {}\r".format(args.message))
+    robot.system_control_command("MDSP {}\r".format(args.message[:28]))
 
     return True
 

@@ -21,7 +21,7 @@ def main():
 
     # now actually do stuff
     robot = erc.ERC()
-    for command in args.commands:
+    for command in args.command:
         robot.system_control_command(command + "\r")
 
     return True

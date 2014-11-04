@@ -16,7 +16,34 @@ A program for issuing system control commands to an ERC-series robot. For exampl
 
 	usage: motocommand [-h] [-d] command [command ...]
 	
-	Connect to a YASNAC ERC and send system control command(s)
+	Connects to a YASNAC ERC and sends system control command(s)
+	Make sure you quote each command, for example: 
+	
+	motocommand "SVON 1" "JWAIT 10" "START TESTJOB"
+	
+	Available System Control Functions:
+	-----------------------------------
+	CANCEL - Cancels the error status
+	CYCLE n - Selects a motion cycle mode, n is between 1 and 3
+	DELETE j - Deletes the specified job, j is a job name or * 
+	HLOCK n - Turns operator's panel interlock on/off, n is 1 or 0
+	HOLD n - Puts a hold on the robot manipulator, n is 1 or 0
+	JSEQ s,n - Set job and line number; s is job name, n is line no.
+	JWAIT n - Wait n seconds, return status, n is between -1 and 32767
+	MDSP s - Displays a message on the console, s is up to 28 chars.
+	RESET - Resets robot alarms
+	SETMJ j - Makes the specified job the master job, j is a job name
+	START j - Starts robot operation. j is a an OPTIONAL job name
+	SVON n - Turns servo power on/off. n is 1 or 0
+	
+	Available Status Read Functions:
+	--------------------------------
+	RALARM - Lists error and alarm codes
+	RJDIR j - Lists all jobs or subjobs of j, j is * or a job name
+	RJSEQ - Lists the current job name, line number and step number
+	RPOS - Lists the current robot position in rectangular coordinates
+	RPOSJ - Lists the current robot position in joint coordinates
+	RSTATS - Lists the status of several robot conditions
 	
 	positional arguments:
 	  command      A command to send to the ERC controller

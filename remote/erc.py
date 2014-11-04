@@ -471,21 +471,41 @@ class ERC(object):
         filename = "{}.{}".format(message.strip(), filename_extension)
         # fixme: safety-check the filename
         if not os.path.exists(filename):
-            pass
-            # so we need to send 90,000 with a 4 digit error... but which one?
+            # fixme: there must be a more appropriate way to respond
+            # we probably need to send 90,000 with a 4 digit error... but
+            # which one?
+            raise InvalidTransaction("Unknown file {}".format(filename))
+
+        # read the contents of the file
+        with open(filename) as filein:
+            # try to fix the line endings
+            payload = os.path.splitext(filename)[0] + "\r"
+            payload += "\r".join(filein.read().splitlines())
+
+        pass
         # fixme: finish this!
 
     def system_control_command(self, command_string):
         """ Issue a system control command """
+        result = None
+
+        # fixup for the command, not sure if we want to go here
+        if not command_string.endswith("\r"):
+            command_string += "\r"
+
         self.send_handshake()
         self.confirmed_write(encode("01,000", command_string)[0])
         self.send_eot()
         self.receive_handshake()
         packet = decode(self.raw_read())
-        if packet.header != "90,000" or packet.body != '0000\r':
+        if packet.header == "90,001":
+            result = packet.body.rstrip().split(",")
+        elif packet.header != "90,000" or packet.body != '0000\r':
             warn("expected 90,000 with 0000, got {}".format(packet))
         self.send_ack()
         self.receive_eot()
+
+        return result
 
     def servos_on(self):
         """ Shorthand for servo_power(True) """

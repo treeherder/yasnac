@@ -17,12 +17,17 @@ def main():
         "Connect to a YASNAC ERC and send system control command(s)"))
     argp.add_argument('command', nargs="+", help=(
         "A command to send to the ERC controller"))
+    argp.add_argument('-d', '--debug', action="store_true", help=(
+        "Enable transaction debugging output"))
     args = argp.parse_args()
 
     # now actually do stuff
     robot = erc.ERC()
+    erc.DEBUG = args.debug
     for command in args.command:
-        robot.system_control_command(command + "\r")
+        result = robot.system_control_command(command)
+        if result:
+            print ",".join(result)
 
     return True
 

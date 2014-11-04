@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-"""
-motomessage: Connect to a YASNAC ERC and display a console message
-"""
+""" motomessage: Connect to a YASNAC ERC and display a console message """
 import argparse
 import sys
 
@@ -17,7 +15,11 @@ def main():
         "Connect to a YASNAC ERC and display a console message"))
     argp.add_argument('message', help=(
         "The message to display on the ERC console. MAX 28 characters!"))
+    argp.add_argument('-d', '--debug', action="store_true", help=(
+        "Enable transaction debugging output"))
     args = argp.parse_args()
+
+    erc.DEBUG = args.debug
 
     # now actually do stuff
     if len(args.message) > 28:
@@ -26,7 +28,7 @@ def main():
             "message is {} characters.").format(len(args.message)))
 
     robot = erc.ERC()
-    robot.system_control_command("MDSP {}\r".format(args.message[:28]))
+    robot.execute_command("MDSP {}\r".format(args.message[:28]))
 
     return True
 

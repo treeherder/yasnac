@@ -485,8 +485,8 @@ class ERC(object):
         pass
         # fixme: finish this!
 
-    def system_control_command(self, command_string):
-        """ Issue a system control command """
+    def execute_command(self, command_string):
+        """ Issue a system control or status read command """
         result = None
 
         # fixup for the command, not sure if we want to go here
@@ -517,15 +517,15 @@ class ERC(object):
 
     def servo_power(self, power=True):
         """ EXPERIMENTAL: tell the ERC to turn on/off the servos """
-        self.system_control_command("SVON {}\r".format("1" if power else "0"))
+        self.execute_command("SVON {}\r".format("1" if power else "0"))
 
     def start(self, job=None):
         """ EXPERIMENTAL: tell the ERC to run a job """
-        self.system_control_command("START {}\r".format(job if job else ""))
+        self.execute_command("START {}\r".format(job if job else ""))
 
     def hold(self, hold=True):
         """ EXPERIMENTAL: tell the ERC to stop or clear the stop flag """
-        self.system_control_command("HOLD {}\r".format("1" if hold else "0"))
+        self.execute_command("HOLD {}\r".format("1" if hold else "0"))
 
     def loop(self):
         """ A continuous event loop for handling ERC serial IO """

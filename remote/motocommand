@@ -14,7 +14,32 @@ def main():
     or a bool type (where True indicates successful exection)
     """
     argp = argparse.ArgumentParser(description=(
-        "Connect to a YASNAC ERC and send system control command(s)"))
+        "Connects to a YASNAC ERC and sends system control command(s)\n"
+        "Make sure you quote each command, for example: \n"
+        '\nmotocommand "SVON 1" "JWAIT 10" "START TESTJOB"\n'
+        "\nAvailable System Control Functions:\n"
+        "-----------------------------------\n"
+        "CANCEL - Cancels the error status\n"
+        "CYCLE n - Selects a motion cycle mode, n is between 1 and 3\n"
+        "DELETE j - Deletes the specified job, j is a job name or * \n"
+        "HLOCK n - Turns operator's panel interlock on/off, n is 1 or 0\n"
+        "HOLD n - Puts a hold on the robot manipulator, n is 1 or 0\n"
+        "JSEQ s,n - Set job and line number; s is job name, n is line no.\n"
+        "JWAIT n - Wait n seconds, return status, n is between -1 and 32767\n"
+        "MDSP s - Displays a message on the console, s is up to 28 chars.\n"
+        "RESET - Resets robot alarms\n"
+        "SETMJ j - Makes the specified job the master job, j is a job name\n"
+        "START j - Starts robot operation. j is a an OPTIONAL job name\n"
+        "SVON n - Turns servo power on/off. n is 1 or 0\n"
+        "\nAvailable Status Read Functions:\n"
+        "--------------------------------\n"
+        "RALARM - Lists error and alarm codes\n"
+        "RJDIR j - Lists all jobs or subjobs of j, j is * or a job name\n"
+        "RJSEQ - Lists the current job name, line number and step number\n"
+        "RPOS - Lists the current robot position in rectangular coordinates\n"
+        "RPOSJ - Lists the current robot position in joint coordinates\n"
+        "RSTATS - Lists the status of several robot conditions\n"),
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     argp.add_argument('command', nargs="+", help=(
         "A command to send to the ERC controller"))
     argp.add_argument('-d', '--debug', action="store_true", help=(
@@ -24,6 +49,7 @@ def main():
     # now actually do stuff
     robot = erc.ERC()
     erc.DEBUG = args.debug
+
     for command in args.command:
         result = robot.system_control_command(command)
         if result:

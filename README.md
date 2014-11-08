@@ -8,6 +8,54 @@ This repository is a collection of libraries and programs for working with a YAS
 
 ---
 
+## motofile
+
+A program for sending, receiving, deleting, and listing files on an ERC-series robot. There are options that enable both local and remote overwriting of files (which are disabled by default); also options for changing the format of file list output.
+
+### Usage
+
+	usage: motofile [-h] [--overwrite] [-s [SEPARATOR]] [-d]
+	                {list,get,put,delete} [filename]
+	
+	Get or put files on a YASNAC ERC series robot
+	
+	positional arguments:
+	  {list,get,put,delete}
+	                        Specifies the file operation to be performed: "list"
+	                        prints a list of files on the robot, "get" or "put"
+	                        transfer the named file, "delete" removes the named
+	                        file from the robot
+	  filename              The name of the file to get, put, or delete
+	
+	optional arguments:
+	  -h, --help            show this help message and exit
+	  --overwrite           Allow new files to overwrite existing files with the
+	                        same name
+	  -s [SEPARATOR], --separator [SEPARATOR]
+	                        When listing files, print them separated by the given
+	                        argument, or null if you specify 0. The default
+	                        separator is newline.
+	  -d, --debug           Enable transaction debugging output
+
+
+### Examples
+
+List files on the robot:
+
+	motofile list
+
+Get or put a file on the robot:
+
+	motofile get DEMO.JBI
+	motofile get DEMO.JBR
+	motofile --overwrite put DEMO.JBI
+	
+Delete a file from the robot:
+
+	motofile delete DEMO
+
+---
+
 ## motocommand
 
 A program for issuing system control commands to an ERC-series robot. For example: `motocommand "SVON 1"` can be used to power up the robot's servo motors.

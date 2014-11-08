@@ -19,7 +19,7 @@ A program for issuing system control commands to an ERC-series robot. For exampl
 	Connects to a YASNAC ERC and sends system control command(s)
 	Make sure you quote each command, for example: 
 	
-	motocommand "SVON 1" "JWAIT 10" "START TESTJOB"
+	motocommand "SVON 1" "START TESTJOB"
 	
 	Available System Control Functions:
 	-----------------------------------

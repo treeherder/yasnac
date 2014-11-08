@@ -23,7 +23,7 @@ STX = chr(0x02)  # Start Of Text: denotes end of heading and beginning of data
 ETX = chr(0x03)  # End Of Text: signals that all payload data has been sent
 EOT = chr(0x04)  # End Of Transmission: indicates the end of transmission
 ENQ = chr(0x05)  # Enquiry: requests a response from the receiving station
-DLE = chr(0x10)  # Data Link Escape: modifies the meaning of a subsequent chars
+DLE = chr(0x10)  # Data Link Escape: modifies the meaning of a subsequent char
 NAK = chr(0x15)  # Negative Acknowledge: indicates improper communication
 ETB = chr(0x17)  # End of Transmission Block: used in place of ETX to indicate
                  # that there are more message blocks for the current message
@@ -54,56 +54,56 @@ TRANSACTIONS = {
     '01,000': 'command from remote computer',
 
     # job and special system files - transmission
-    '02,001': '"JOBNAME".JBI - indicates independent job data',
-    '02,002': '"JOBBAME".JBR - indicates related (master) job data',
-    '02,011': 'WEAV.DAT - weave data',
-    '02,012': 'TOOL.DAT - tool data',
-    '02,013': 'UFRAME.DAT - user coordinate data',
-    '02,014': 'ABSWELD.DAT - welder condition data',  # undocumented
-    '02,015': 'CV.DAT - conveyer condition data',
-    '02,016': 'SENSOR.DAT - locus correction condition data',
-    '02,017': 'COMARC2.DAT - com-arc 2 condition data',
-    '02,018': 'PC1PC2.DAT - phase comprehension data',
-    '02,020': 'POSOUT.DAT - unknown',  # undocumented
-    '02,022': 'RECIPRO.DAT - unknown',  # undocumented
-    '02,023': 'PALACT.DAT - palletizing action data',  # undocumented
-    '02,030': 'SYSTEM.DAT - system data',
+    '02,001': 'put *.JBI',  # indicates independent job data
+    '02,002': 'put *.JBR',  # indicates related (master) job data
+    '02,011': 'put WEAV.DAT',  # weave data
+    '02,012': 'put TOOL.DAT',  # tool data
+    '02,013': 'put UFRAME.DAT',  # user coordinate data
+    '02,014': 'put ABSWELD.DAT',  # welder condition data undocumented
+    '02,015': 'put CV.DAT',  # conveyer condition data
+    '02,016': 'put SENSOR.DAT',  # locus correction condition data
+    '02,017': 'put COMARC2.DAT',  # com-arc 2 condition data
+    '02,018': 'put PC1PC2.DAT',  # phase comprehension data
+    '02,020': 'put POSOUT.DAT',  # unknown, undocumented
+    '02,022': 'put RECIPRO.DAT',  # unknown,  undocumented
+    '02,023': 'put PALACT.DAT',  # palletizing action data, undocumented
+    '02,030': 'put SYSTEM.DAT',  # system data
 
     # job and special system files - request
-    '02,051': '"JOBNAME".JBI - request for independent job data',
-    '02,052': '"JOBNAME".JBR - request for related (master) job data',
-    '02,061': 'WEAV.DAT - request for weave data',
-    '02,062': 'TOOL.DAT - request for tool data',
-    '02,063': 'UFRAME.DAT - request for user coordinate data',
-    '02,064': 'ABSWELD.DAT - request for welder condition data',  # undoc'd
-    '02,065': 'CV.DAT - request for conveyer condition',
-    '02,066': 'SENSOR.DAT - request for locus correction condition data',
-    '02,067': 'COMARC2.DAT - request for COM-ARC2 condition data',
-    '02,068': 'PC1PC2.DAT - request for phase comprehension data',
-    '02,070': 'POSOUT.DAT - request for unknown',  # undocumented
-    '02,072': 'RECIPRO.DAT - request for unknown',  # undocumented
-    '02,073': 'PALACT.DAT - request for palletizing action data',  # undoc'd.
-    '02,080': 'SYSTEM.DAT - request for system data',
+    '02,051': 'get *.JBI',  # independent job data
+    '02,052': 'get *.JBR',  # related (master) job data
+    '02,061': 'get WEAV.DAT',  # weave data
+    '02,062': 'get TOOL.DAT',  # tool data
+    '02,063': 'get UFRAME.DAT',  # user coordinate data
+    '02,064': 'get ABSWELD.DAT',  # welder condition data, undoc'd
+    '02,065': 'get CV.DAT',  # conveyer condition
+    '02,066': 'get SENSOR.DAT',  # locus correction condition data
+    '02,067': 'get COMARC2.DAT',  # COM-ARC2 condition data
+    '02,068': 'get PC1PC2.DAT',  # phase comprehension data
+    '02,070': 'get POSOUT.DAT',  # unknown, undocumented
+    '02,072': 'get RECIPRO.DAT',  # unknown, undocumented
+    '02,073': 'get PALACT.DAT',  # palletizing action data, undoc'd.
+    '02,080': 'get SYSTEM.DAT',  # system data
 
-    # variables data - transmission
-    '03,001': 'byte variable',
-    '03,002': 'integer variable',
-    '03,003': 'double precision variable',
-    '03,004': 'real variable',
-    '03,005': 'position variable (pulse data)',
-    '03,006': 'position variable (rectangular data)',
-    '03,007': 'external axis variable (pulse data)',
-    '03,008': 'external axis variable (rectangular data)',
+    # variable data - transmission
+    '03,001': 'put byte',
+    '03,002': 'put integer',
+    '03,003': 'put double',
+    '03,004': 'put real',
+    '03,005': 'put position (pulse data)',
+    '03,006': 'put position (rectangular data)',
+    '03,007': 'put external axis (pulse data)',
+    '03,008': 'put external axis (rectangular data)',
 
     # variable data - request
-    '03,051': 'request for byte variable',
-    '03,052': 'request for integer variable',
-    '03,053': 'request for double precision variable',
-    '03,054': 'request for real variable',
-    '03,055': 'request for position variable (pulse data)',
-    '03,056': 'request for position variable (rectangular data)',
-    '03,057': 'request for external axis variable (pulse data)',
-    '03,058': 'request for external axis variable (rectangular data)',
+    '03,051': 'get byte',
+    '03,052': 'get integer',
+    '03,053': 'get double',
+    '03,054': 'get real',
+    '03,055': 'get position (pulse data)',
+    '03,056': 'get position (rectangular data)',
+    '03,057': 'get external axis (pulse data)',
+    '03,058': 'get external axis (rectangular data)',
 
     # job execution response
     '90,000': '0000 or a 4 digit error code, response to a command',
@@ -217,12 +217,14 @@ def multifind(haystack, needles, start=0, end=None):
     """
     if end is None:
         end = len(haystack)
+
     for index, char in enumerate(haystack):
         # fixme: test this next conditional properly
         if not start <= index <= end:
             continue
         if char in needles:
             return index
+
     return -1
 
 
@@ -231,25 +233,31 @@ def checksum(packet, stop, start=1):
     return sum([ord(c) for c in packet[start:stop]])
 
 
-def encode(transaction_code, body):
+def encode(transaction_code, body, name_packet=False):
     """
     return a list of raw packet strings which represent the given
     transaction_code and body
     """
     # return a list of packets to send, based on the given code and body
-    body_chunks = list(chunks(body, 256))
-    chunk_count = len(body_chunks)
+    if name_packet:
+        # if this flag is set, the first line of the body is a filename that
+        # needs to be in its own hoity-toity packet
+        (name, _, body_content) = body.partition('\r')
+        body_chunks = [name + '\r'] + list(chunks(body_content, 256))
+    else:
+        body_chunks = list(chunks(body, 256))
+    final_chunk = len(body_chunks) - 2  # -1 for first packet
     result = list()
 
     # handle the first packet
     packet = "".join([SOH, transaction_code, STX, body_chunks.pop(0),
-                      ETB if chunk_count > 1 else ETX])
+                      ETB if final_chunk > 0 else ETX])
     packet += struct.pack("<H", checksum(packet, len(packet) + 2))
     result.append(packet)
 
     # ...and now the rest
     for index, chunk in enumerate(body_chunks):
-        packet = "".join([STX, chunk, ETB if index < chunk_count else ETX])
+        packet = "".join([STX, chunk, ETB if index < final_chunk else ETX])
         packet += struct.pack("<H", checksum(packet, len(packet) + 2))
         result.append(packet)
 
@@ -291,6 +299,34 @@ def decode(packet):
     return Packet(body, header, footer, packet_length)
 
 
+def filename_to_jobname(filename):
+    """
+    Return a filename simplified into a jobname, for example:
+    ~/jobs/thing.JBI becomes thing
+    """
+    return os.path.splitext(os.path.basename(filename))[0]
+
+
+def header_code_lookup(mode, filename):
+    """
+    return the result of a reverse lookup on the TRANSACTIONS dict,
+    for example, given "put" and TOOL.DAT, the result is 02,012
+    """
+    key = mode + " "
+    if filename.endswith('.JBI'):
+        key += "*.JBI"
+    elif filename.endswith('.JBR'):
+        key += "*.JBR"
+    else:
+        key += os.path.basename(filename)  # keep the filename extension here
+
+    for transaction_code, description in TRANSACTIONS.items():
+        if description == key:
+            return transaction_code
+
+    raise RuntimeError("Couldn't find code for transaction: {}".format(key))
+
+
 def test():
     """ temporary development function """
     warn("entering erc comms loop")
@@ -306,6 +342,7 @@ class ERC(object):
 
     def __init__(self):
         self.handlers = dict({
+            # Incoming files
             '02,001': self.handle_incoming_file,
             '02,002': self.handle_incoming_file,
             '02,011': self.handle_incoming_file,
@@ -320,7 +357,21 @@ class ERC(object):
             '02,022': self.handle_incoming_file,
             '02,023': self.handle_incoming_file,
             '02,030': self.handle_incoming_file,
+            # Outgoing files
             '02,051': self.handle_file_request,
+            '02,052': self.handle_file_request,
+            '02,061': self.handle_file_request,
+            '02,062': self.handle_file_request,
+            '02,063': self.handle_file_request,
+            '02,064': self.handle_file_request,
+            '02,065': self.handle_file_request,
+            '02,066': self.handle_file_request,
+            '02,067': self.handle_file_request,
+            '02,068': self.handle_file_request,
+            '02,070': self.handle_file_request,
+            '02,072': self.handle_file_request,
+            '02,073': self.handle_file_request,
+            '02,080': self.handle_file_request,
         })
         self.link = serial.Serial(port='/dev/ttyS0',
                                   baudrate=9600,
@@ -402,13 +453,13 @@ class ERC(object):
         while True:
             raw_packet = self.raw_read()
             packet = decode(raw_packet)
-            warn("DRAINING MULTIPACKET {}".format(packet.header))
+            warn("draining multipacket message {}".format(packet.__repr__))
             result += packet.body
             self.send_ack()
             if packet.footer[0] == ETX:
                 break
         self.receive_eot()
-        warn("MULTIPACKET DRAIN COMPLETE")
+        warn("multipacket message drain complete")
         return result
 
     def confirmed_write(self, packet):
@@ -421,11 +472,22 @@ class ERC(object):
             if raw_packet == expected_ack:
                 confirmed = True
             else:
-                warn("wrong ack, got {} expected {}".format(
+                warn("wrong ack: got {} expected {}".format(
                     raw_packet.__repr__(), expected_ack.__repr__()))
         return confirmed
 
-    def handle_incoming_file(self, header, message):
+    def short_message(self, header, body, autofix=True):
+        """
+        Handshake, send a single-packet message, send EOT. Useful for
+        transfer confirmations and error reports
+        """
+        if autofix and not body.endswith("\r"):
+            body += "\r"
+        self.send_handshake()
+        self.confirmed_write(encode(header, body)[0])
+        self.send_eot()
+
+    def handle_incoming_file(self, header, message, confirm=True):
         """
         Handle incoming file transfers;
         - save the file to disk
@@ -445,19 +507,17 @@ class ERC(object):
         # Write the file
         # fixme: safety-check the filename
         with open(filename, "w") as fileout:
-            fileout.write("\r".join(payload) + "\r")
+            fileout.write("\r\n".join(payload))
 
-        # The machine should have hung up
-        self.send_handshake()
+        if confirm:
+            # Now we send back the higher-level transfer confirmation...
+            self.short_message("90,000", "0000")
 
-        # Now we send back the higher-level transfer confirmation...
-        self.confirmed_write(encode("90,000", "0000\r")[0])
-        self.send_eot()
-        return (filename, "\r".join(payload))
+        return filename
 
     def handle_file_request(self, header, message):
         """
-        Handle a request for a file.
+        Handle a  a file request
         - load the file from disk
         - send the proper replies
         """
@@ -468,66 +528,103 @@ class ERC(object):
         else:
             filename_extension = "DAT"
 
-        filename = "{}.{}".format(message.strip(), filename_extension)
+        target = message.strip()
+        filename = "{}.{}".format(target, filename_extension)
         # fixme: safety-check the filename
+
+        # The machine should have hung up
+        self.receive_eot()
+
         if not os.path.exists(filename):
-            # fixme: there must be a more appropriate way to respond
-            # we probably need to send 90,000 with a 4 digit error... but
-            # which one?
-            raise InvalidTransaction("Unknown file {}".format(filename))
+            log('ERC requested nonexistant file: "{}"'.format(filename))
+            self.short_message("90,000", "4040")
+            return
 
-        # read the contents of the file
+        # The response headers are 50 less than their requests, so
+        # the  a JBI is 02,051 and the response is 02,001
+        request_header_parts = header.split(',')
+        response_header = "{},{:03}".format(
+            request_header_parts[0],
+            int(request_header_parts[1]) - 50)
+
+        # read the contents of the file on disk
         with open(filename) as filein:
-            # try to fix the line endings
-            payload = os.path.splitext(filename)[0] + "\r"
-            payload += "\r".join(filein.read().splitlines())
+            self.transmit_file_data(response_header, target, filein.read())
 
-        pass
-        # fixme: finish this!
+        return filename
+
+    def transmit_file_data(self, header, name, data):
+        """ Send the given (file) data to the ERC using the given name """
+        payload = name + "\r" + "\r\n".join(data.splitlines())
+
+        self.send_handshake()
+        for packet in encode(header, payload, name_packet=True):
+            self.confirmed_write(packet)
+        self.send_eot()
+
+    def get_file(self, filename):
+        """ Request file data from the ERC """
+        header_code = header_code_lookup("get", filename)
+
+        name = filename_to_jobname(filename)
+        self.short_message(header_code, name)
+
+        # Here comes the file transfer. It will likely be multipacket
+        self.receive_handshake()
+        packet = decode(self.raw_read())
+        self.send_ack()
+
+        message = packet.body
+
+        # is this a multi-packet message? if so, read the whole message
+        if packet.footer[0] == ETB:
+            # keep capturing packets until an ETX
+            message += self.read_multipacket_message()
+
+        self.handle_incoming_file(packet.header, message, confirm=False)
+
+    def put_file(self, filename):
+        """ Send the given file to the ERC """
+        header_code = header_code_lookup("put", filename)
+
+        with open(filename) as inputfh:
+            name = filename_to_jobname(filename)
+            self.transmit_file_data(header_code, name, inputfh.read())
+
+        # at this point the ERC will send the a confirmation message
+        self.receive_execution_response()
 
     def execute_command(self, command_string):
         """ Issue a system control or status read command """
-        result = None
-
         # fixup for the command, not sure if we want to go here
         if not command_string.endswith("\r"):
             command_string += "\r"
 
-        self.send_handshake()
-        self.confirmed_write(encode("01,000", command_string)[0])
-        self.send_eot()
+        self.short_message("01,000", command_string)
+        result = self.receive_execution_response()
+        return result
+
+    def receive_execution_response(self):
+        """ Receive an incoming 90,00x message, return the contained data """
+        result = None
+
         self.receive_handshake()
         packet = decode(self.raw_read())
         if packet.header == "90,001":
-            result = packet.body.rstrip().split(",")
-        elif packet.header != "90,000" or packet.body != '0000\r':
-            warn("expected 90,000 with 0000, got {}".format(packet))
+            result = ",".join(packet.body.strip().splitlines()).split(",")
+        elif packet.header != "90,000":
+            raise InvalidTransaction((
+                "Expected a confirmation or error packet, "
+                "instead we got {}").format(packet.__repr__))
+        elif packet.body != '0000\r':
+            error_string = ERRORS.get(packet.body.strip(), "Unknown")
+            result = warn("ERROR: {}".format(error_string), force=True)
         self.send_ack()
         self.receive_eot()
 
         return result
 
-    def servos_on(self):
-        """ Shorthand for servo_power(True) """
-        return self.servo_power(True)
-
-    def servos_off(self):
-        """ Shorthand for servo_power(False) """
-        return self.servo_power(False)
-
-    def servo_power(self, power=True):
-        """ EXPERIMENTAL: tell the ERC to turn on/off the servos """
-        self.execute_command("SVON {}\r".format("1" if power else "0"))
-
-    def start(self, job=None):
-        """ EXPERIMENTAL: tell the ERC to run a job """
-        self.execute_command("START {}\r".format(job if job else ""))
-
-    def hold(self, hold=True):
-        """ EXPERIMENTAL: tell the ERC to stop or clear the stop flag """
-        self.execute_command("HOLD {}\r".format("1" if hold else "0"))
-
-    def loop(self):
+    def loop(self, once=False):
         """ A continuous event loop for handling ERC serial IO """
         while True:
             raw_packet = self.raw_read()
@@ -548,10 +645,9 @@ class ERC(object):
 
             # parsed packet handlers (packet begins with SOH)
             packet = decode(raw_packet)
-
-            warn("packet header: {}".format(packet.header))
-
+            warn("processing packet with header: {}".format(packet.header))
             message = packet.body
+
             self.send_ack()
 
             # is this a multi-packet message? if so, read the whole message
@@ -562,9 +658,8 @@ class ERC(object):
             if packet.header in self.handlers:
                 log("handled packet(s), result was: {}".format(
                     self.handlers[packet.header](packet.header, message)))
-                continue
             else:
                 warn("Don't know how to handle code {}".format(packet.header))
 
-            warn("received {} message: {}".format(TRANSACTIONS[packet.header],
-                                                  message.__repr__()))
+            if once:
+                break

@@ -11,7 +11,8 @@ def main():
     primary function for command-line execution. return an exit status integer
     or a bool type (where True indicates successful exection)
     """
-    argp = argparse.ArgumentParser(description=(
+    formatter = argparse.RawDescriptionHelpFormatter
+    argp = argparse.ArgumentParser(formatter_class=formatter, description=(
         "Connects to a YASNAC ERC and sends system control command(s)\n"
         "Make sure you quote each command, for example: \n"
         '\nmotocommand "SVON 1" "JWAIT 10" "START TESTJOB"\n'
@@ -36,8 +37,7 @@ def main():
         "RJSEQ - Lists the current job name, line number and step number\n"
         "RPOS - Lists the current robot position in rectangular coordinates\n"
         "RPOSJ - Lists the current robot position in joint coordinates\n"
-        "RSTATS - Lists the status of several robot conditions\n"),
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        "RSTATS - Lists the status of several robot conditions\n"))
     argp.add_argument('command', nargs="+", help=(
         "A command to send to the ERC controller"))
     argp.add_argument('-d', '--debug', action="store_true", help=(

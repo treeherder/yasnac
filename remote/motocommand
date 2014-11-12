@@ -30,6 +30,9 @@ def main():
         "SETMJ j - Makes the specified job the master job, j is a job name\n"
         "START j - Starts robot operation. j is a an OPTIONAL job name\n"
         "SVON n - Turns servo power on/off. n is 1 or 0\n"
+        "RUFRAME ? - Unknown undocumented function\n"
+        "WUFRAME ? - Unknown undocumented function\n"
+        "CVTRJ ? - Unknown undocumented function\n"
         "\nAvailable Status Read Functions:\n"
         "--------------------------------\n"
         "RALARM - Lists error and alarm codes\n"
@@ -51,6 +54,10 @@ def main():
         result = robot.execute_command(command)
         if result:
             print ",".join(result)
+            if command == 'RSTATS':
+                erc.warn("The result represents these flags: "
+                         + ",".join(erc.decode_rstats(result)), True)
+
 
     return True
 

@@ -14,8 +14,44 @@ def list_remote_files(connection):
 
 def delete_remote_file(connection, filename):
     """ Delete the named file from the given ERC device """
-    jobname = erc.filename_to_jobname(filename)
-    return connection.execute_command("DELETE {}".format(jobname))
+    rootname = erc.filename_to_rootname(filename)
+    return connection.execute_command("DELETE {}".format(rootname))
+
+
+def handle_get(robot, args):
+    """ Handler for get mode. Attempts to download a file from the ERC """
+    print "getting " + args.filename
+    return robot.get_file(args.filename)
+
+
+def handle_put(robot, args):
+    """ Handler for put mode. Attempts to upload a file to the ERC """
+    if args.overwrite:
+        rootname = erc.filename_to_rootname(args.filename)
+        remote_files = list_remote_files(robot)
+        if rootname in remote_files:
+            print ('A job named "{}" already exists on the robot, it will '
+                   'now be deleted to enable this upload').format(rootname)
+            delete_remote_file(robot, args.filename)
+    print "putting " + args.filename
+    return robot.put_file(args.filename)
+
+
+def handle_list(robot, args):
+    """ Handler for list mode. Prints a list of files on the ERC """
+    print args.separator.join(list_remote_files(robot))
+    return
+
+
+def handle_delete(robot, args):
+    """ Handler for delete mode. Deletes files from the ERC """
+    rootname = erc.filename_to_rootname(args.filename)
+    remote_files = list_remote_files(robot)
+    if rootname not in remote_files:
+        print 'file "{}" does not exist on the robot'.format(rootname)
+        return False
+    print "deleting " + args.filename
+    return delete_remote_file(robot, args.filename)
 
 
 def main():
@@ -23,9 +59,14 @@ def main():
     primary function for command-line execution. return an exit status integer
     or a bool type (where True indicates successful exection)
     """
+    handlers = {'get': handle_get,
+                'put': handle_put,
+                'list': handle_list,
+                'delete': handle_delete}
+
     argp = argparse.ArgumentParser(description=(
         "Get or put files on a YASNAC ERC series robot"))
-    argp.add_argument('mode', choices=['list', 'get', 'put', 'delete'], help=(
+    argp.add_argument('mode', choices=handlers.keys(), help=(
         'Specifies the file operation to be performed: "list" prints a '
         'list of files on the robot, "get" or "put" transfer the named file, '
         '"delete" removes the named file from the robot'))
@@ -48,6 +89,7 @@ def main():
     if args.mode in ('get', 'put', 'delete'):
         if not args.filename:
             print "You must specify a file/job name to {}".format(args.mode)
+            return False
 
         if args.mode != "delete":
             if os.path.splitext(args.filename)[1] not in ('.JBI', '.JBR'):
@@ -67,51 +109,12 @@ def main():
 
     # Sanity doing
     robot = erc.ERC()
+    result = handlers[args.mode](robot, args)
+    if result:
+        print result
+        return False
 
-    if args.mode == 'get':
-        print "getting " + args.filename
-        result = robot.get_file(args.filename)
-        if result:
-            print result
-            return False
-        return True
-
-    if args.mode == "put":
-        if args.overwrite:
-            jobname = erc.filename_to_jobname(args.filename)
-            remote_files = list_remote_files(robot)
-            if jobname in remote_files:
-                print ('A job named "{}" already exists on the robot, it '
-                       'will now be deleted to enable this '
-                       'upload').format(jobname)
-                delete_remote_file(robot, args.filename)
-        print "putting " + args.filename
-        result = robot.put_file(args.filename)
-        if result:
-            print result
-            return False
-        return True
-
-    if args.mode == "list":
-        print args.separator.join(list_remote_files(robot))
-        return True
-
-    if args.mode == "delete":
-        jobname = erc.filename_to_jobname(args.filename)
-        remote_files = list_remote_files(robot)
-        if jobname not in remote_files:
-            print 'job "{}" does not exist on the robot'.format(jobname)
-            return False
-        print "deleting " + args.filename
-        result = delete_remote_file(robot, args.filename)
-        if result:
-            print result
-            return False
-        return True
-
-    print "Unknown mode {}".format(args.mode)
-    return False
-
+    return True
 
 if __name__ == '__main__':
     RESULT = main()

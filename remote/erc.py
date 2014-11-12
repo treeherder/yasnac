@@ -157,32 +157,40 @@ ERRORS = {
 }
 
 
-Packet = collections.namedtuple("Packet", 'body header footer packet_length')
+Message = collections.namedtuple("Message", 'body header footer')
 
 
-class InvalidPacketStart(Exception):
-    """ The packet does not start with SOH nor STX """
+ControlChar = collections.namedtuple("ControlChar", 'char name')
+
+
+class InvalidBlockStart(Exception):
+    """ The block does not start with SOH nor STX """
     pass
 
 
-class InvalidPacketNeedMore(Exception):
-    """ The packet appears to be incomplete """
+class InvalidBlockNeedMore(Exception):
+    """ The block appears to be incomplete """
     pass
 
 
-class InvalidPacketBody(Exception):
-    """ Neither ETX nor ETB could be found & the packet is at max length """
+class InvalidBlockBody(Exception):
+    """ Neither ETX nor ETB could be found & the block is at max length """
     pass
 
 
-class InvalidPacketChecksum(Exception):
+class InvalidBlockChecksum(Exception):
     """ The given checksum value doesn't match the actual checksum value """
     pass
 
 
 class InvalidTransaction(Exception):
     """ General communications failure, expected IO did not happen """
-    pass
+    def __init__(self, expected_value, received_value):
+        super(InvalidTransaction, self).__init__((
+            "Invalid transaction; expected:{!r} "
+            "received:{!r}").format(
+                CONTROL_CHARS.get(expected_value, expected_value),
+                CONTROL_CHARS.get(received_value, received_value)))
 
 
 def log(message):
@@ -209,6 +217,25 @@ def chunks(iterable, chunksize):
         yield iterable[i:i+chunksize]
 
 
+def decode_rstats(rstats):
+    """
+    Given the result of the RSTATS query command, return a list containing
+    string keywords that represent the active bits in the result.
+    for example: decode_rstat([2,0]) returns ('')
+    """
+    bits_0 = ('cycle=step', 'cycle=1 cycle', 'cycle=auto', 'running',
+              'in-guard driving', 'undocumented_0_32', 'undocumented_0_64',
+              'undocumented_0_128')
+    bits_1 = ('panel hold', 'teach-box hold', 'external hold', 'command hold',
+              'alarm', 'error', 'servos on', 'undocumented_1_128')
+    result = list()
+    for byte, names in (int(rstats[0]), bits_0), (int(rstats[1]), bits_1):
+        for index, bit_name in enumerate(names):
+            if byte & (2 ** index):
+                result.append(bit_name)
+    return result
+
+
 def multifind(haystack, needles, start=0, end=None):
     """
     like string.find, except the search term is a list of searches that will
@@ -228,89 +255,113 @@ def multifind(haystack, needles, start=0, end=None):
     return -1
 
 
-def checksum(packet, stop, start=1):
-    """ Return the checksum for the given packet """
-    return sum([ord(c) for c in packet[start:stop]])
+def checksum(block, stop, start=1):
+    """ Return the checksum for the given block """
+    return sum([ord(c) for c in block[start:stop]])
 
 
-def encode(transaction_code, body, name_packet=False):
+def encode(header_code, body, name_block=False):
     """
-    return a list of raw packet strings which represent the given
-    transaction_code and body
+    return a list of raw block strings which represent the given header_code
+    and body
     """
-    # return a list of packets to send, based on the given code and body
-    if name_packet:
+    # return a list of blocks properly formatted for transmission, based on
+    # the given header_code and body
+    if name_block:
         # if this flag is set, the first line of the body is a filename that
-        # needs to be in its own hoity-toity packet
+        # needs to be in its own block
         (name, _, body_content) = body.partition('\r')
         body_chunks = [name + '\r'] + list(chunks(body_content, 256))
     else:
         body_chunks = list(chunks(body, 256))
-    final_chunk = len(body_chunks) - 2  # -1 for first packet
+    final_chunk = len(body_chunks) - 1  # -1 because of zero list indexing
     result = list()
 
-    # handle the first packet
-    packet = "".join([SOH, transaction_code, STX, body_chunks.pop(0),
-                      ETB if final_chunk > 0 else ETX])
-    packet += struct.pack("<H", checksum(packet, len(packet) + 2))
-    result.append(packet)
+    # handle the first block
+    block = "".join([SOH, header_code, STX, body_chunks.pop(0),
+                     ETB if final_chunk > 0 else ETX])
+    block += struct.pack("<H", checksum(block, len(block) + 2))
+    result.append(block)
+    final_chunk -= 1
 
     # ...and now the rest
     for index, chunk in enumerate(body_chunks):
-        packet = "".join([STX, chunk, ETB if index < final_chunk else ETX])
-        packet += struct.pack("<H", checksum(packet, len(packet) + 2))
-        result.append(packet)
+        block = "".join([STX, chunk, ETB if index < final_chunk else ETX])
+        block += struct.pack("<H", checksum(block, len(block) + 2))
+        result.append(block)
 
     return result
 
 
-def decode(packet):
+def decode(block):
     """
-    return a Packet object containing the decoded contents of the given packet
+    return a Message object containing the decoded contents of the given block
     """
-    if packet.startswith(SOH):
+    if block.startswith(SOH):
         header_bytes = 8
-        header = struct.unpack("c6sc", packet[0:header_bytes])[1]
-    elif packet.startswith(STX):
+        header = struct.unpack("c6sc", block[0:header_bytes])[1]
+    elif block.startswith(STX):
         header_bytes = 1
-        header = struct.unpack("c", packet[header_bytes])
-    elif packet in CONTROL_CHARS:
-        raise InvalidPacketStart(("Attempt to decode {} control char as "
-                                  "packet").format(CONTROL_CHARS[packet]))
+        header = struct.unpack("c", block[header_bytes])
+    elif block in CONTROL_CHARS:
+        raise InvalidBlockStart(
+            "Attempt to decode {} control char as block".format(
+                CONTROL_CHARS[block]))
     else:
-        raise InvalidPacketStart("{}".format(packet.__repr__()))
+        raise InvalidBlockStart(block.__repr__())
 
     max_search_length = 256 + header_bytes + 1
-    body_end = multifind(packet, (ETX, ETB), start=header_bytes,
+    body_end = multifind(block, (ETX, ETB), start=header_bytes,
                          end=max_search_length)
     if body_end < 0:
-        if len(packet) < max_search_length:
-            raise InvalidPacketNeedMore
+        if len(block) < max_search_length:
+            raise InvalidBlockNeedMore
         else:
-            raise InvalidPacketBody
+            raise InvalidBlockBody
 
-    body = packet[header_bytes:body_end]
-    packet_length = body_end + 3
-    footer = struct.unpack("<cH", packet[body_end:packet_length])
-    calculated_checksum = checksum(packet, packet_length - 2)
+    body = block[header_bytes:body_end]
+    block_length = body_end + 3
+    footer = struct.unpack("<cH", block[body_end:block_length])
+    calculated_checksum = checksum(block, block_length - 2)
     if footer[1] != calculated_checksum:
-        raise InvalidPacketChecksum("{} != {}".format(footer[1],
-                                                      calculated_checksum))
-    return Packet(body, header, footer, packet_length)
+        raise InvalidBlockChecksum("{!r} != {!r}".format(footer[1],
+                                                         calculated_checksum))
+    return Message(body, header, footer[0])
 
 
-def filename_to_jobname(filename):
+def filename_to_rootname(filename):
     """
-    Return a filename simplified into a jobname, for example:
+    Return a filename simplified into its rootname, for example:
     ~/jobs/thing.JBI becomes thing
     """
     return os.path.splitext(os.path.basename(filename))[0]
 
 
+def namefix(filename, content):
+    """
+    make sure that if a jobname appears inside a job file, the jobname matches
+    the jobs's on disk filename. log any corrections to stdout
+
+    WARNING: side effect: this function enforces \r\n line endings
+    """
+    expected_jobname = filename_to_rootname(filename)
+    expected_entry = "//NAME {}".format(expected_jobname)
+
+    result = []
+    for line in content.splitlines():
+        if line.startswith("//NAME ") and line != expected_entry:
+            result.append(expected_entry)
+            warn('Altering job content: "{}" -> "{}"'.format(
+                line, expected_entry), force=True)
+            continue
+        result.append(line)
+    return "\r\n".join(result) + "\r\n"
+
+
 def header_code_lookup(mode, filename):
     """
-    return the result of a reverse lookup on the TRANSACTIONS dict,
-    for example, given "put" and TOOL.DAT, the result is 02,012
+    return the result of a reverse lookup on the TRANSACTIONS dict, for
+    example, given "put" and TOOL.DAT, the result is 02,012
     """
     key = mode + " "
     if filename.endswith('.JBI'):
@@ -325,6 +376,13 @@ def header_code_lookup(mode, filename):
             return transaction_code
 
     raise RuntimeError("Couldn't find code for transaction: {}".format(key))
+
+
+def header_extension_lookup(header_code):
+    """
+    Return the filename extension associated with the given header code
+    """
+    return os.path.splitext(TRANSACTIONS.get(header_code, "UNKNOWN.DAT"))[1]
 
 
 def test():
@@ -390,17 +448,16 @@ class ERC(object):
             input_buffer.append(self.link.read(size=self.link.inWaiting()))
             time.sleep(0.015)
         result = "".join(input_buffer)
-        warn("raw_read {} bytes: {}".format(len(result), result.__repr__()))
+        warn("raw_read {} bytes: {!r}".format(len(result), result))
         return result
 
     def raw_write(self, message):
         """ Send raw data on the serial port """
         self.link.write(message)
-        warn("raw_write {} bytes: {}".format(len(message),
-                                             message.__repr__()))
+        warn("raw_write {} bytes: {!r}".format(len(message), message))
 
     def current_ack(self):
-        """ Return the appropriate ACK message to the calling function """
+        """ Return the appropriate ACK message, flip self.ack_bit """
         result = ACK1 if self.ack_bit else ACK0
         self.ack_bit = not self.ack_bit
         return result
@@ -420,10 +477,9 @@ class ERC(object):
         """ receive an EOT control character, which resets the ACK bit """
         if read_from_wire:
             # There should be an EOT on the wire. Drain it.
-            raw_packet = self.raw_read()
-            if raw_packet != EOT:
-                raise InvalidTransaction("Expected EOT, got {}".format(
-                    raw_packet.__repr__()))
+            raw_block = self.raw_read()
+            if raw_block != EOT:
+                raise InvalidTransaction("EOT", raw_block)
         self.ack_bit = False
 
     def send_handshake(self):
@@ -431,55 +487,38 @@ class ERC(object):
         # send ENQ then listen for an ACK0/ACK1
         self.raw_write(ENQ)
         expected_reply = self.current_ack()
-        raw_packet = self.raw_read()
-        if raw_packet != expected_reply:
-            raise InvalidTransaction("Expecting {}, got {}".format(
-                expected_reply.__repr__(), raw_packet.__repr__()))
+        raw_block = self.raw_read()
+        if raw_block != expected_reply:
+            raise InvalidTransaction(expected_reply, raw_block)
         return True
 
     def receive_handshake(self):
         """ Ping the robot """
         expected_input = ENQ
-        raw_packet = self.raw_read()
-        if raw_packet != expected_input:
-            raise InvalidTransaction("Expecting {}, got {}".format(
-                expected_input.__repr__(), raw_packet.__repr__()))
+        raw_block = self.raw_read()
+        if raw_block != expected_input:
+            raise InvalidTransaction(expected_input, raw_block)
         self.send_ack()
         return True
 
-    def read_multipacket_message(self):
-        """ read ETB packets until an ETX package is received """
-        result = ""
-        while True:
-            raw_packet = self.raw_read()
-            packet = decode(raw_packet)
-            warn("draining multipacket message {}".format(packet.__repr__))
-            result += packet.body
-            self.send_ack()
-            if packet.footer[0] == ETX:
-                break
-        self.receive_eot()
-        warn("multipacket message drain complete")
-        return result
-
-    def confirmed_write(self, packet):
-        """ Send the given packet, wait for the appropriate ack """
+    def confirmed_write(self, block):
+        """ Send the given block, wait for the appropriate ack """
         confirmed = False
         while not confirmed:
-            self.raw_write(packet)
+            self.raw_write(block)
             expected_ack = self.current_ack()
-            raw_packet = self.raw_read()
-            if raw_packet == expected_ack:
+            raw_block = self.raw_read()
+            if raw_block == expected_ack:
                 confirmed = True
             else:
-                warn("wrong ack: got {} expected {}".format(
-                    raw_packet.__repr__(), expected_ack.__repr__()))
+                warn("wrong ack? will retry.; got:{!r} expected:{!r}".format(
+                    raw_block, expected_ack))
         return confirmed
 
     def short_message(self, header, body, autofix=True):
         """
-        Handshake, send a single-packet message, send EOT. Useful for
-        transfer confirmations and error reports
+        Handshake, send a single-block message, send EOT. Useful for transfer
+        confirmations and error reports
         """
         if autofix and not body.endswith("\r"):
             body += "\r"
@@ -487,27 +526,19 @@ class ERC(object):
         self.confirmed_write(encode(header, body)[0])
         self.send_eot()
 
-    def handle_incoming_file(self, header, message, confirm=True):
+    def handle_incoming_file(self, message, confirm=True):
         """
         Handle incoming file transfers;
         - save the file to disk
         - send a properly formatted reply message to the yasnac
         """
-        payload = message.splitlines()
-
-        if header == '02,001':
-            filename_extension = "JBI"  # independent job data
-        elif header == '02,002':
-            filename_extension = "JBR"  # related (master) job data
-        else:
-            filename_extension = "DAT"
-
-        filename = "{}.{}".format(payload.pop(0), filename_extension)
+        (name, _, content) = message.body.partition('\r')
+        filename = name + header_extension_lookup(message.header)
+        # fixme: safety-check the filename
 
         # Write the file
-        # fixme: safety-check the filename
         with open(filename, "w") as fileout:
-            fileout.write("\r\n".join(payload))
+            fileout.write(content)
 
         if confirm:
             # Now we send back the higher-level transfer confirmation...
@@ -515,93 +546,72 @@ class ERC(object):
 
         return filename
 
-    def handle_file_request(self, header, message):
+    def handle_file_request(self, message):
         """
-        Handle a  a file request
-        - load the file from disk
-        - send the proper replies
+        Handle a  a file request from the ERC system
         """
-        if header == '02,051':
-            filename_extension = "JBI"  # independent job data
-        elif header == '02,052':
-            filename_extension = "JBR"  # related (master) job data
-        else:
-            filename_extension = "DAT"
-
-        target = message.strip()
-        filename = "{}.{}".format(target, filename_extension)
+        requested_name = message.body.strip()
+        filename = requested_name + header_extension_lookup(message.header)
         # fixme: safety-check the filename
 
-        # The machine should have hung up
-        self.receive_eot()
-
         if not os.path.exists(filename):
-            log('ERC requested nonexistant file: "{}"'.format(filename))
+            log('ERC requested nonexistant file: ' + filename)
             self.short_message("90,000", "4040")
             return
 
-        # The response headers are 50 less than their requests, so
-        # the  a JBI is 02,051 and the response is 02,001
-        request_header_parts = header.split(',')
-        response_header = "{},{:03}".format(
-            request_header_parts[0],
-            int(request_header_parts[1]) - 50)
-
-        # read the contents of the file on disk
-        with open(filename) as filein:
-            self.transmit_file_data(response_header, target, filein.read())
+        self.put_file(filename, confirm=False)
 
         return filename
 
-    def transmit_file_data(self, header, name, data):
-        """ Send the given (file) data to the ERC using the given name """
-        payload = name + "\r" + "\r\n".join(data.splitlines())
-
-        self.send_handshake()
-        for packet in encode(header, payload, name_packet=True):
-            self.confirmed_write(packet)
-        self.send_eot()
-
-    def get_file(self, filename):
+    def get_file(self, filename, header=None):
         """ Request file data from the ERC """
-        header_code = header_code_lookup("get", filename)
+        if not header:
+            header = header_code_lookup("get", filename)
+        self.short_message(header, filename_to_rootname(filename))
 
-        name = filename_to_jobname(filename)
-        self.short_message(header_code, name)
-
-        # Here comes the file transfer. It will likely be multipacket
+        # The response is an incoming file transfer
         self.receive_handshake()
-        packet = decode(self.raw_read())
-        self.send_ack()
+        message = self.read_message()
+        return self.handle_incoming_file(message, confirm=False)
 
-        message = packet.body
+    def put_file(self, filename, header=None, confirm=True):
+        """
+        Send the given file to the ERC with an automatically resolved header
+        code
+        """
+        if not header:
+            header = header_code_lookup("put", filename)
 
-        # is this a multi-packet message? if so, read the whole message
-        if packet.footer[0] == ETB:
-            # keep capturing packets until an ETX
-            message += self.read_multipacket_message()
-
-        self.handle_incoming_file(packet.header, message, confirm=False)
-
-    def put_file(self, filename):
-        """ Send the given file to the ERC """
-        header_code = header_code_lookup("put", filename)
+        rootname = filename_to_rootname(filename)
 
         with open(filename) as inputfh:
-            name = filename_to_jobname(filename)
-            self.transmit_file_data(header_code, name, inputfh.read())
+            data = namefix(rootname, inputfh.read())
+        payload = rootname + "\r" + data
 
-        # at this point the ERC will send the a confirmation message
-        self.receive_execution_response()
+        self.send_handshake()
+        for block in encode(header, payload, name_block=True):
+            self.confirmed_write(block)
+        self.send_eot()
+
+        if confirm:
+            # at this point the ERC will send a confirmation message
+            return self.receive_execution_response()
+
+        return True
 
     def execute_command(self, command_string):
         """ Issue a system control or status read command """
-        # fixup for the command, not sure if we want to go here
         if not command_string.endswith("\r"):
             command_string += "\r"
 
         self.short_message("01,000", command_string)
         result = self.receive_execution_response()
+        if type(result) != list:
+            # this error condition was already warned about, this prevents
+            # the error string from being interpreted as a result
+            # fixme: to raise or not to raise?
+            result = []
+
         return result
 
     def receive_execution_response(self):
@@ -609,57 +619,69 @@ class ERC(object):
         result = None
 
         self.receive_handshake()
-        packet = decode(self.raw_read())
-        if packet.header == "90,001":
-            result = ",".join(packet.body.strip().splitlines()).split(",")
-        elif packet.header != "90,000":
-            raise InvalidTransaction((
-                "Expected a confirmation or error packet, "
-                "instead we got {}").format(packet.__repr__))
-        elif packet.body != '0000\r':
-            error_string = ERRORS.get(packet.body.strip(), "Unknown")
-            result = warn("ERROR: {}".format(error_string), force=True)
-        self.send_ack()
-        self.receive_eot()
+        message = self.read_message()
+        body = message.body.strip()
+        if message.header == "90,001":
+            # join all the body lines together, split the result on commas
+            result = ",".join(body.splitlines()).split(",")
+        elif message.header != "90,000":
+            raise InvalidTransaction("confirmation or error message", message)
+        elif body != '0000':
+            error_string = ERRORS.get(body, "Unknown error " + body)
+            result = warn("ERROR from ERC system: {}".format(error_string))
 
         return result
 
-    def loop(self, once=False):
+    def read_message(self, raw_block=None):
+        """ Read a complete message from the wire, including multi-block """
+        if not raw_block:
+            raw_block = self.raw_read()
+
+        if not (raw_block.startswith(SOH) or raw_block.startswith(STX)):
+            if raw_block in CONTROL_CHARS:
+                return ControlChar(raw_block, CONTROL_CHARS[raw_block])
+            else:
+                raise InvalidBlockStart("Block starts with invalid sequence: "
+                                        + raw_block.__repr__())
+
+        block = decode(raw_block)
+        body = block.body
+        first_header = block.header
+        self.send_ack()
+
+        while block.footer == ETB:
+            # ETB means there is more message data in subsequent blocks
+            block = decode(self.raw_read())
+            body += block.body
+            self.send_ack()
+
+        self.receive_eot()
+
+        return Message(body, first_header, block.footer)
+
+    def loop(self):
         """ A continuous event loop for handling ERC serial IO """
         while True:
-            raw_packet = self.raw_read()
+            raw_block = self.raw_read()
 
-            # raw packet handlers
-            if raw_packet == ENQ:
+            # raw block handlers
+            if raw_block == ENQ:
                 self.send_ack()
                 continue
 
-            if raw_packet == EOT:
-                warn("received EOT")
+            if raw_block == EOT:
+                warn("received out-of-sequence EOT")
                 self.receive_eot(False)
                 continue
 
-            if not raw_packet.startswith(SOH):
-                warn("No handler for packet {}".format(raw_packet.__repr__()))
+            if not raw_block.startswith(SOH):
+                warn("No handler for block: " + raw_block.__repr__())
                 continue
 
-            # parsed packet handlers (packet begins with SOH)
-            packet = decode(raw_packet)
-            warn("processing packet with header: {}".format(packet.header))
-            message = packet.body
-
-            self.send_ack()
-
-            # is this a multi-packet message? if so, read the whole message
-            if packet.footer[0] == ETB:
-                # keep capturing packets until an ETX
-                message += self.read_multipacket_message()
-
-            if packet.header in self.handlers:
-                log("handled packet(s), result was: {}".format(
-                    self.handlers[packet.header](packet.header, message)))
+            # message handlers (block begins with SOH)
+            message = self.read_message(raw_block)
+            if message.header in self.handlers:
+                result = self.handlers[message.header](message)
+                log("handled {}, result: {!r}".format(message.header, result))
             else:
-                warn("Don't know how to handle code {}".format(packet.header))
-
-            if once:
-                break
+                warn("no handler for message " + message.header)

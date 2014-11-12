@@ -24,7 +24,7 @@ A program for directly commanding the ERC manipulator over the serial link. Util
 	                        x,y,z,tx,ty,tz. tx,ty,tz are tool list angles in
 	                        degrees. If you don't want to specify a particular
 	                        value, leave it empty. You can specify deltas, such as
-	                        +10.1,-5,/3,*2 for movement relative to the robot's
+	                        +=10.1,-=5,/=3,*=2 for movement relative to the robot's
 	                        current position. NOTE: The resulting values won't be
 	                        sanity-checked!
 	

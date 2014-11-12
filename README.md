@@ -1,10 +1,56 @@
-# YASNAC
+# YASNAC ERC Interface Tools
 
-This repository is a collection of libraries and programs for working with a YASNAC **ERC-series** industrial robot. The project is currently divided into "disk" and "remote" components.
+This repository is a collection of libraries and programs for working with the very old YASNAC **ERC-series** industrial robots. The project is currently divided into "disk" and "remote" components.
 
 - The disk code emulates an ERC-series disk drive and allows files to be loaded and stored to a PC instead of an ancient single density floppy disk.
 
-- The remote code is for interfacing with the ERC-series robot directly as a connected PC. In addition to job transfer, this enables remote operation of utility functions and state queries. 
+- The remote code is for interfacing with the ERC-series robot directly as a connected PC. In addition to job transfer, this enables remote operation of utility functions and state queries. A number of helper programs are included. The bulk of the code is in the erc.py library.
+
+---
+
+## motomove
+
+A program for directly commanding the ERC manipulator over the serial link. Utilized the un-/under- documented ERC MOVL system control command. Has the optional ability to power the servos up before the motion and then optionally power them down after. The program will block until the motion is complete.
+
+### Usage
+
+	usage: motomove [-h] [--speed [SPEED]] [--power {on,off,onoff}] [-d] position
+	
+	Connect to an ERC-series robot and move the manipulator
+	
+	positional arguments:
+	  position              The position to move the robot into. Must be in
+	                        rectangular coordinates and comma separated:
+	                        x,y,z,tx,ty,tz. tx,ty,tz are tool list angles in
+	                        degrees. If you don't want to specify a particular
+	                        value, leave it empty. You can specify deltas, such as
+	                        +10.1,-5,/3,*2 for movement relative to the robot's
+	                        current position. NOTE: The resulting values won't be
+	                        sanity-checked!
+	
+	optional arguments:
+	  -h, --help            show this help message and exit
+	  --speed [SPEED]       The speed at which the robot is to perform the motion,
+	                        in mm/s. Allowable values are from 0.1 to 1200.00. The
+	                        default is a glacial and safeish 10.0. BE SAFE.
+	  --power {on,off,onoff}
+	                        Controls servo power; a value of "on" will activate
+	                        servo power in order to perform the motion, a value of
+	                        "off" will turn the servo power off after performing
+	                        the motion, a value of "onoff" will both activate the
+	                        servo power before the motion and deactivate the servo
+	                        power after the motion is complete. The default is not
+	                        to make any change to the state of servo power.
+	  -d, --debug           Enable transaction debugging output
+	
+	If you see a "too few arguments" error, try adding "--" before your position
+	argument. For example: motomove -- "coordinates"
+
+### Examples:
+
+	motomove -- "+=10,+=20,+=30"
+	motomove --speed=600 -- "-195.725,222.899,1671.442,14.65,-27.77,148.86"
+	motomove --power onoff -- "*=2,*=1.5,/=2"
 
 ---
 

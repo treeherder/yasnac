@@ -66,8 +66,8 @@ class SoftFC1(object):
     filelist = None
     overwrite = False
 
-    def __init__(self, filelist=None, overwrite=False):
-        self.com = serial.Serial(port='/dev/ttyS0', baudrate=4800,
+    def __init__(self, filelist=None, overwrite=False, baudrate=4800, port='/dev/ttyS0'):
+        self.com = serial.Serial(port, baudrate,
                                  parity=serial.PARITY_EVEN, timeout=None)
         sleep(1)  # wait for the port to be ready (an arbitrary period)
         log("opened serial port")
@@ -249,6 +249,10 @@ def main():
 
     argp = argparse.ArgumentParser(description=(
         "MotoDisk: a software emulator for the YASNAC FC1 floppy disk drive"))
+    argp.add_argument('-p', '--port', default='/dev/ttyS0', help=(
+        "serial port to use"))
+    argp.add_argument('-b', '--baud', default=4800, help=(
+        "serialport baudrate to use"))
     argp.add_argument('-d', '--debug', action="store_true", help=(
         "enable debugging output"))
     argp.add_argument('-o', '--overwrite', action="store_true", help=(
@@ -262,7 +266,7 @@ def main():
 
     DEBUG = args.debug
 
-    disk = SoftFC1(filelist=args.file, overwrite=args.overwrite)
+    disk = SoftFC1(port=args.port, baudrate=args.baud, filelist=args.file, overwrite=args.overwrite)
     disk.emulate()
 
     return True
